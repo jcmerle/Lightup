@@ -1,8 +1,8 @@
 # AUTHORS
 
-Arthur Ledoux
-Jean-Charles Merle
-Arris Sahed
+Arthur LEDOUX
+Jean-Charles MERLE
+Arris SAHED
 
 # README
 
