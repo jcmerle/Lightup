@@ -3,6 +3,7 @@
 Arthur Ledoux
 Jean-Charles Merle
 Arris Sahed
+
 # README
 
 <a href="https://gitlab.emi.u-bordeaux.fr/pt2/lightup/-/commits/main"><img alt="pipeline status" src="https://gitlab.emi.u-bordeaux.fr/pt2/lightup/badges/main/pipeline.svg" /></a>
