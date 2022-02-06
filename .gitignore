@@ -8,7 +8,7 @@ html/
 CMakeCache.txt
 CMakeFiles/
 Testing/
-.vscode/
+.vscode/*
 # specific executable
 game_text
 game_test
