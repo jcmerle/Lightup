@@ -68,4 +68,8 @@ add_test(testv2_undo_redo_some ./game_test "undo_redo_some")
 add_test(testv2_undo_redo_all ./game_test "undo_redo_all")
 add_test(testv2_restart_undo ./game_test "restart_undo")
 
+add_test(test_game_save ./game_test "game_save")
+
+#############################  #############################
+
 # EOF
