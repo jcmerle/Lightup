@@ -110,6 +110,9 @@ struct test tests[] = {  // dummy test
     {"undo_redo_all", test_undo_redo_all},
     {"restart_undo", test_restart_undo},
 
+    /* game_tools */
+    {"game_load", test_game_load},
+
     // end
     {NULL, NULL}};
 

@@ -330,3 +330,5 @@ int test_restart_undo(void)
 }
 
 /* ************************************************************************** */
+
+int test_game_load(void) { return EXIT_SUCCESS; }
