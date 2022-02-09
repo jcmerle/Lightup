@@ -16,7 +16,7 @@ set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")   # use CMake option: -DCMAKE_BUILD_TY
 ############################# SRC #############################
 
 # game library
-add_library(game game.c game_ext.c game_aux.c game_private.c queue.c)
+add_library(game game.c game_ext.c game_aux.c game_private.c queue.c game_tools.c)
 
 # game text
 add_executable(game_text game_text.c)
