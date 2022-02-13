@@ -13,6 +13,7 @@
 #include "game.h"
 #include "game_aux.h"
 #include "game_ext.h"
+#include "game_tools.c"
 
 /* ************************************************************************** */
 
@@ -66,9 +67,14 @@ static bool game_step(game g)
     printf("> action: restart\n");
     game_restart(g);
     return true;
+  } else if (c=='w'){
+    printf("> action: save the game\n");
+    char file[100] = "";
+    scanf("%s", file);
+    game_save(g, file);
   } else if (c == 'q') {  // quit
     printf("> action: quit\n");
-    return false;                                 // exit
+    return false;         // exit
   } else if (c == 'l' || c == 'm' || c == 'b') {  // play move
     uint i, j;
     int ret = scanf(" %u %u", &i, &j);
@@ -98,12 +104,12 @@ static bool game_step(game g)
 
 /* ************************************************************************** */
 
-int main(void)
+int main(int argc, char *argv[])
 {
   game g = NULL;
-  // if (argc == 2)
-  //   g = game_load(argv[1]);
-  // else
+  if (argc == 2)
+    g = game_load(argv[1]);
+  else
   g = game_default();
   assert(g);
 
