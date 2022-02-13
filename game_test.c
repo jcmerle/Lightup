@@ -112,6 +112,8 @@ struct test tests[] = {  // dummy test
 
     /*game_save & game_load*/
     {"game_save", test_game_save},
+    /* game_tools */
+    {"game_load", test_game_load},
 
     // end
     {NULL, NULL}};

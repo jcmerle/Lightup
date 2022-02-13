@@ -338,3 +338,5 @@ int test_game_save(void)
 
   return EXIT_SUCCESS;
 }
+
+int test_game_load(void) { return EXIT_SUCCESS; }

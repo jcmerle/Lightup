@@ -65,5 +65,6 @@ int test_undo_redo_some(void);
 int test_undo_redo_all(void);
 int test_restart_undo(void);
 int test_game_save(void);
+int test_game_load(void);
 
 #endif  // __GAME_TEST_H__
