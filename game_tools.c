@@ -4,8 +4,8 @@
 
 #include "game.h"
 #include "game_ext.h"
-#include "game_test.h"
 #include "game_private.h"
+#include "game_test.h"
 
 game game_load(char* filename)
 {
@@ -25,17 +25,25 @@ game game_load(char* filename)
   for (int i = 0; i < nb_rows; i++) {
     for (int j = 0; j < nb_cols; j++) {
       fscanf(file, "%c", &c);
-      if (c == 'b') game_set_square(g, i, j, S_BLANK);
-      else if (c == '*') game_set_square(g, i, j, S_LIGHTBULB);
-      else if (c == 'm') game_set_square(g, i, j, S_MARK);
-      else if (c == '0') game_set_square(g, i, j, S_BLACK0);
-      else if (c == '1') game_set_square(g, i, j, S_BLACK1);
-      else if (c == '2') game_set_square(g, i, j, S_BLACK2);
-      else if (c == '3') game_set_square(g, i, j, S_BLACK3);
-      else if (c == '4') game_set_square(g, i, j, S_BLACK4);
-      else if (c == 'w') game_set_square(g, i, j, S_BLACKU);
-      else
-      {
+      if (c == 'b')
+        game_set_square(g, i, j, S_BLANK);
+      else if (c == '*')
+        game_set_square(g, i, j, S_LIGHTBULB);
+      else if (c == 'm')
+        game_set_square(g, i, j, S_MARK);
+      else if (c == '0')
+        game_set_square(g, i, j, S_BLACK0);
+      else if (c == '1')
+        game_set_square(g, i, j, S_BLACK1);
+      else if (c == '2')
+        game_set_square(g, i, j, S_BLACK2);
+      else if (c == '3')
+        game_set_square(g, i, j, S_BLACK3);
+      else if (c == '4')
+        game_set_square(g, i, j, S_BLACK4);
+      else if (c == 'w')
+        game_set_square(g, i, j, S_BLACKU);
+      else {
         fprintf(stderr, "Wrong state\n");
         exit(EXIT_FAILURE);
       }

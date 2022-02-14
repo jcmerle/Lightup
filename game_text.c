@@ -67,14 +67,14 @@ static bool game_step(game g)
     printf("> action: restart\n");
     game_restart(g);
     return true;
-  } else if (c=='w'){
+  } else if (c == 'w') {
     printf("> action: save the game\n");
     char file[100] = "";
     scanf("%s", file);
     game_save(g, file);
   } else if (c == 'q') {  // quit
     printf("> action: quit\n");
-    return false;         // exit
+    return false;                                 // exit
   } else if (c == 'l' || c == 'm' || c == 'b') {  // play move
     uint i, j;
     int ret = scanf(" %u %u", &i, &j);
@@ -104,13 +104,13 @@ static bool game_step(game g)
 
 /* ************************************************************************** */
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   game g = NULL;
   if (argc == 2)
     g = game_load(argv[1]);
   else
-  g = game_default();
+    g = game_default();
   assert(g);
 
   game_print(g);
