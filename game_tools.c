@@ -88,3 +88,8 @@ void game_save(cgame g, char* filename)
   }
   fclose(file);
 }
+
+uint game_nb_solutions(cgame g)
+{
+  return 0;
+}
