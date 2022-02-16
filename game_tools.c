@@ -88,3 +88,8 @@ void game_save(cgame g, char* filename)
   }
   fclose(file);
 }
+
+bool game_solve(game g)
+{
+  return 0;
+}
