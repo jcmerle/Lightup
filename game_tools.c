@@ -96,7 +96,7 @@ bool game_solve(game g)
 }
 
 uint game_nb_solutions(cgame g)
-(
+{
   return 0;
-)
+}
 
