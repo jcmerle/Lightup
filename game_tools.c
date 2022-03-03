@@ -6,6 +6,7 @@
 #include "game_ext.h"
 #include "game_private.h"
 #include "game_test.h"
+#include "assert.h"
 
 game game_load(char* filename)
 {
@@ -89,7 +90,7 @@ void game_save(cgame g, char* filename)
   fclose(file);
 }
 
-game game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
+void game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
   if(coord_i==nb_rows && coord_j==0){
     //game is over ?
     //  then return g
@@ -100,25 +101,32 @@ game game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
   if(coord_j==nb_cols-1){
     coord_i++;
     coord_j=0;
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j, game g);
+    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j, g);
   }
-  game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, game g);
+  game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g);
 
 
   game_play_move(g,coord_i,coord_j,S_BLANK);
   if(coord_j==nb_cols-1){
     coord_i++;
     coord_j=0;
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j, game g);
+    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j, g);
   }
-  game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, game g);
+  game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g);
 
 }
 
 
 bool game_solve(game g)
 {
-  return 0;
+  assert(g);
+
+  game copy_of_g = game_copy(g);
+  
+
+  game_solve_aux(game_nb_rows(g), game_nb_rows(g), 0, 0, g);
+
+  return true;
 }
 
 uint game_nb_solutions(cgame g)
