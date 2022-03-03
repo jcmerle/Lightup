@@ -29,7 +29,7 @@ game game_load(char* filename)
         game_set_square(g, i, j, S_BLANK);
       else if (c == '*')
         game_set_square(g, i, j, S_LIGHTBULB);
-      else if (c == 'm')
+      else if (c == '-')
         game_set_square(g, i, j, S_MARK);
       else if (c == '0')
         game_set_square(g, i, j, S_BLACK0);
