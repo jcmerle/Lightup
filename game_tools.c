@@ -48,7 +48,9 @@ game game_load(char* filename)
         exit(EXIT_FAILURE);
       }
     }
-    fscanf(file, "%c", &c);
+    fscanf(file, "%c", &c); //We ignore the /r 
+    fscanf(file, "%c", &c); //We ignore the /n
+
   }
   fclose(file);
   game_update_flags(g);
