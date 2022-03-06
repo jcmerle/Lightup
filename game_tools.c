@@ -97,6 +97,36 @@ game game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g, bo
   if(coord_i==nb_rows && coord_j==0){
     return g;
   }
+  
+  if( (coord_j > 0 && game_has_error(g, coord_i, coord_j - 1)) ||
+      (coord_i > 0 && coord_j == 0 && game_has_error(g, coord_i - 1, nb_cols - 1)) )
+  {
+    return g;
+  }
+
+  if(game_check_move(g, coord_i, coord_j, S_BLANK) && !soluce)
+  {
+    game_play_move(g,coord_i,coord_j,S_BLANK);
+  }
+
+  if(coord_j==nb_cols-1  && !soluce)
+  {
+    game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g, soluce);
+  }
+  else if(!soluce)
+  {
+    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g, soluce);
+  }
+
+  //printf("-------AFTER BLANK--------\n");
+  //printf("%d %d\n", coord_i, coord_j);
+  //game_print(g);
+  
+  if(game_is_over(g))
+  {
+    soluce = true;
+  }
+
   if(game_check_move(g, coord_i, coord_j, S_LIGHTBULB)  && !soluce)
   {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
@@ -123,29 +153,6 @@ game game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g, bo
     soluce = true;
   }
 
-
-  if(game_check_move(g, coord_i, coord_j, S_BLANK) && !soluce)
-  {
-    game_play_move(g,coord_i,coord_j,S_BLANK);
-  }
-
-  if(coord_j==nb_cols-1  && !soluce)
-  {
-    game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g, soluce);
-  }
-  else if(!soluce)
-  {
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g, soluce);
-  }
-
-  //printf("-------AFTER BLANK--------\n");
-  //printf("%d %d\n", coord_i, coord_j);
-  //game_print(g);
-  
-  if(game_is_over(g))
-  {
-    soluce = true;
-  }
   printf("%d %d\n", coord_i, coord_j);
   return g;
 }

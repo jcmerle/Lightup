@@ -10,8 +10,8 @@ include(CTest)
 enable_testing()
 
 set(CMAKE_C_FLAGS "-std=c99 -Wall -pthread -Wextra -Wunused-parameter")
-set(CMAKE_C_FLAGS_DEBUG "-g --coverage")    # use CMake option: -DCMAKE_BUILD_TYPE=DEBUG
-set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")   # use CMake option: -DCMAKE_BUILD_TYPE=RELEASE
+set(CMAKE_C_FLAGS_DEBUG "-g -O0 --coverage")    # use CMake option: -DCMAKE_BUILD_TYPE=DEBUG
+set(CMAKE_C_FLAGS_RELEASE "-O3 ")   # use CMake option: -DCMAKE_BUILD_TYPE=RELEASE
 
 ############################# SRC #############################
 
