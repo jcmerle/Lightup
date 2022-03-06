@@ -68,8 +68,11 @@ add_test(testv2_undo_redo_some ./game_test "undo_redo_some")
 add_test(testv2_undo_redo_all ./game_test "undo_redo_all")
 add_test(testv2_restart_undo ./game_test "restart_undo")
 
-add_test(test_game_save ./game_test "game_save")
-add_test(test_game_load ./game_test "game_load")
+############################# TEST GAME_TOOLS ######################s####
+
+add_test(test_game_save  ./game_test "game_save")
+add_test(test_game_load  ./game_test "game_load")
+add_test(test_game_solve ./game_test "game_solve")
 
 #############################  #############################
 

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "game.h"
+#include "game_aux.h"
 #include "game_ext.h"
 #include "game_private.h"
 #include "game_test.h"
@@ -25,7 +26,7 @@ game game_load(char* filename)
 
   for (int i = 0; i < nb_rows; i++) {
     for (int j = 0; j < nb_cols; j++) {
-      fscanf(file, "%c", &c);
+      fscanf(file, "%c [^\n]", &c);
       if (c == 'b')
         game_set_square(g, i, j, S_BLANK);
       else if (c == '*')
@@ -48,9 +49,8 @@ game game_load(char* filename)
         fprintf(stderr, "Wrong state\n");
         exit(EXIT_FAILURE);
       }
-    }
-    fscanf(file, "%c", &c); //We ignore the /r 
-    fscanf(file, "%c", &c); //We ignore the /n
+    } 
+    //fscanf(file, "%c", &c); //We ignore the /n
 
   }
   fclose(file);
@@ -92,43 +92,74 @@ void game_save(cgame g, char* filename)
   fclose(file);
 }
 
-void game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
+game game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g, bool soluce){
+
   if(coord_i==nb_rows && coord_j==0){
-    //game is over ?
-    //  then return g
-    return;
+    return g;
   }
-  game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
-
-  if(coord_j==nb_cols-1){
-    coord_i++;
-    coord_j=0;
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j, g);
+  if(game_check_move(g, coord_i, coord_j, S_LIGHTBULB)  && !soluce)
+  {
+    game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
   }
-  game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g);
+  
 
-
-  game_play_move(g,coord_i,coord_j,S_BLANK);
-  if(coord_j==nb_cols-1){
-    coord_i++;
-    coord_j=0;
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j, g);
+  if(coord_j==nb_cols-1  && !soluce)
+  {
+    game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g, soluce);
   }
-  game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g);
+  else if(!soluce)
+  {
+    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g, soluce);
+  }
+  
+  //printf("-------AFTER LIGHTBULB--------\n");
+  //printf("%d %d\n", coord_i, coord_j);
+  //game_print(g);
 
+
+
+   if(game_is_over(g))
+  {
+    soluce = true;
+  }
+
+
+  if(game_check_move(g, coord_i, coord_j, S_BLANK) && !soluce)
+  {
+    game_play_move(g,coord_i,coord_j,S_BLANK);
+  }
+
+  if(coord_j==nb_cols-1  && !soluce)
+  {
+    game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g, soluce);
+  }
+  else if(!soluce)
+  {
+    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g, soluce);
+  }
+
+  //printf("-------AFTER BLANK--------\n");
+  //printf("%d %d\n", coord_i, coord_j);
+  //game_print(g);
+  
+  if(game_is_over(g))
+  {
+    soluce = true;
+  }
+  printf("%d %d\n", coord_i, coord_j);
+  return g;
 }
 
 
 bool game_solve(game g)
 {
   assert(g);
+  bool soluce = false;
 
-  game copy_of_g = game_copy(g);
-  
+  game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g, soluce);
 
-  game_solve_aux(game_nb_rows(g), game_nb_rows(g), 0, 0, g);
 
-  return true;
+  return soluce;
 }
 
 uint game_nb_solutions(cgame g)

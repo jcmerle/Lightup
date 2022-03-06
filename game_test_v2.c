@@ -377,3 +377,19 @@ int test_game_load(void)
   if (test0) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
+
+int test_game_solve(void)
+{
+  game g = game_default();
+  //game g = game_load("../examples/game_3x10(1).txt");
+  game_solve(g);
+  printf("-------LAST--------\n");
+  game_print(g);
+
+  if(!game_is_over(g))
+  {
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
+}
