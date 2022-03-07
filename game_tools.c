@@ -92,81 +92,85 @@ void game_save(cgame g, char* filename)
   fclose(file);
 }
 
-game game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g, bool soluce){
+bool game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
 
   if(coord_i==nb_rows && coord_j==0){
-    return g;
+    return game_is_over(g);
   }
-  
+  /*
   if( (coord_j > 0 && game_has_error(g, coord_i, coord_j - 1)) ||
       (coord_i > 0 && coord_j == 0 && game_has_error(g, coord_i - 1, nb_cols - 1)) )
-  {
-    return g;
-  }
+  */
 
-  if(game_check_move(g, coord_i, coord_j, S_BLANK) && !soluce)
-  {
-    game_play_move(g,coord_i,coord_j,S_BLANK);
-  }
-
-  if(coord_j==nb_cols-1  && !soluce)
-  {
-    game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g, soluce);
-  }
-  else if(!soluce)
-  {
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g, soluce);
-  }
-
-  //printf("-------AFTER BLANK--------\n");
-  //printf("%d %d\n", coord_i, coord_j);
-  //game_print(g);
-  
-  if(game_is_over(g))
-  {
-    soluce = true;
-  }
-
-  if(game_check_move(g, coord_i, coord_j, S_LIGHTBULB)  && !soluce)
+  if(game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
   }
   
 
-  if(coord_j==nb_cols-1  && !soluce)
+  if(coord_j==nb_cols-1)
   {
-    game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g, soluce);
+    if(game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g))
+    {
+      return true;
+    }
   }
-  else if(!soluce)
+  else
   {
-    game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g, soluce);
+    if(game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g))
+    {
+      return true;
+    }
   }
   
   //printf("-------AFTER LIGHTBULB--------\n");
   //printf("%d %d\n", coord_i, coord_j);
   //game_print(g);
 
-
-
-   if(game_is_over(g))
+  if(game_check_move(g, coord_i, coord_j, S_BLANK))
   {
-    soluce = true;
+    game_play_move(g,coord_i,coord_j,S_BLANK);
   }
 
-  printf("%d %d\n", coord_i, coord_j);
-  return g;
+  if(coord_j==nb_cols-1)
+  {
+    if(game_solve_aux(nb_rows,nb_cols,coord_i + 1, 0, g))
+    {
+      return true;
+    }
+  }
+  else
+  {
+    if(game_solve_aux(nb_rows,nb_cols,coord_i, coord_j+1, g))
+    {
+      return true;
+    }
+  }
+
+  return false;
+
+  //printf("-------AFTER BLANK--------\n");
+  //printf("%d %d\n", coord_i, coord_j);
+  //game_print(g);
 }
 
 
 bool game_solve(game g)
 {
   assert(g);
-  bool soluce = false;
+  game copy = game_copy(g);
 
-  game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g, soluce);
+  
 
-
-  return soluce;
+  if(game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g))
+  {
+    return true;
+  }
+  else
+  {
+    g = game_copy(copy);
+    return false;
+  }
 }
 
 uint game_nb_solutions(cgame g)
@@ -174,3 +178,66 @@ uint game_nb_solutions(cgame g)
   return 0;
 }
 
+
+// bool _nb_right(game g,uint i,uint j) {
+        
+//     if(game_is_black(g,i,j)){
+        
+//         return false;
+        
+//     }
+        
+    // game_play_move(g,i,j,S_LIGHTBULB);
+        
+    // if(game_has_error(g,i,j)){
+        
+//         return false;
+        
+//     }
+        
+//     for (uint r = 0; r < game_nb_rows(g); r++)
+        
+//     {
+        
+//         for (uint c = 0; c <game_nb_cols(g); c++)
+        
+//         {
+        
+//             if(game_get_square(g,r,c)==S_BLANK){
+        
+//                 game_play_move(g,r,c,S_LIGHTBULB);
+        
+//                 if(game_has_error(g,r,c)){
+        
+//                     return false;
+        
+//                 }
+        
+//             }
+        
+//         }
+        
+        
+        
+//     }
+//         game_print(g);
+//     return true;
+        
+//  }
+// bool game_solve(game g){
+//     game g1=game_copy(g);
+//         for (uint i = 0; i < game_nb_rows(g1); i++)
+//         {
+//             for (uint j = 0; j < game_nb_cols(g1); j++)
+//             {
+//                 if(_nb_right(g1,i,j)){
+//                     g=game_copy(g1);
+//                   return true;
+//                 }
+//                 game_restart(g1);
+                
+//             }
+//         }
+//             return false;
+        
+// }
