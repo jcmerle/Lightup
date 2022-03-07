@@ -381,7 +381,7 @@ int test_game_load(void)
 int test_game_solve(void)
 {
   game g = game_default();
-  //game g = game_load("../examples/game_4x4.txt");
+  //game g = game_load("../examples/game_3x10.txt");
   game_solve(g);
   printf("-------LAST--------\n");
   game_print(g);

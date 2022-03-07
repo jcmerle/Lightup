@@ -102,6 +102,17 @@ bool game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
       (coord_i > 0 && coord_j == 0 && game_has_error(g, coord_i - 1, nb_cols - 1)) )
   */
 
+ for(int y = 0; y < nb_rows; y++)
+  {
+    for(int x = 0; x < nb_cols; x++)
+    {
+      if (game_has_error(g, x, y))
+      {
+        return false;
+      }
+    }
+  }
+
   if(game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
