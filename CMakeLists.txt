@@ -26,6 +26,10 @@ target_link_libraries(game_text game)
 add_executable(game_test game_test.c game_test_aux.c game_test_v1.c game_test_v2.c game_examples.c)
 target_link_libraries(game_test game)
 
+# game solve
+add_executable(game_solve game_solve.c)
+target_link_libraries(game_solve game)
+
 ############################# TEST V1 #############################
 
 # Aux Tests(game_aux.h)
