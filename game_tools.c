@@ -97,16 +97,12 @@ bool game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
   if(coord_i==nb_rows && coord_j==0){
     return game_is_over(g);
   }
-  /*
-  if( (coord_j > 0 && game_has_error(g, coord_i, coord_j - 1)) ||
-      (coord_i > 0 && coord_j == 0 && game_has_error(g, coord_i - 1, nb_cols - 1)) )
-  */
 
  for(int y = 0; y < nb_rows; y++)
   {
     for(int x = 0; x < nb_cols; x++)
     {
-      if (game_has_error(g, x, y))
+      if (game_has_error(g, y, x))
       {
         return false;
       }
@@ -133,10 +129,6 @@ bool game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
       return true;
     }
   }
-  
-  //printf("-------AFTER LIGHTBULB--------\n");
-  //printf("%d %d\n", coord_i, coord_j);
-  //game_print(g);
 
   if(game_check_move(g, coord_i, coord_j, S_BLANK))
   {
@@ -159,10 +151,6 @@ bool game_solve_aux(int nb_rows,int nb_cols,int coord_i, int coord_j, game g){
   }
 
   return false;
-
-  //printf("-------AFTER BLANK--------\n");
-  //printf("%d %d\n", coord_i, coord_j);
-  //game_print(g);
 }
 
 
@@ -170,8 +158,6 @@ bool game_solve(game g)
 {
   assert(g);
   game copy = game_copy(g);
-
-  
 
   if(game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g))
   {
@@ -188,67 +174,3 @@ uint game_nb_solutions(cgame g)
 {
   return 0;
 }
-
-
-// bool _nb_right(game g,uint i,uint j) {
-        
-//     if(game_is_black(g,i,j)){
-        
-//         return false;
-        
-//     }
-        
-    // game_play_move(g,i,j,S_LIGHTBULB);
-        
-    // if(game_has_error(g,i,j)){
-        
-//         return false;
-        
-//     }
-        
-//     for (uint r = 0; r < game_nb_rows(g); r++)
-        
-//     {
-        
-//         for (uint c = 0; c <game_nb_cols(g); c++)
-        
-//         {
-        
-//             if(game_get_square(g,r,c)==S_BLANK){
-        
-//                 game_play_move(g,r,c,S_LIGHTBULB);
-        
-//                 if(game_has_error(g,r,c)){
-        
-//                     return false;
-        
-//                 }
-        
-//             }
-        
-//         }
-        
-        
-        
-//     }
-//         game_print(g);
-//     return true;
-        
-//  }
-// bool game_solve(game g){
-//     game g1=game_copy(g);
-//         for (uint i = 0; i < game_nb_rows(g1); i++)
-//         {
-//             for (uint j = 0; j < game_nb_cols(g1); j++)
-//             {
-//                 if(_nb_right(g1,i,j)){
-//                     g=game_copy(g1);
-//                   return true;
-//                 }
-//                 game_restart(g1);
-                
-//             }
-//         }
-//             return false;
-        
-// }
