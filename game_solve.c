@@ -49,7 +49,9 @@ int main(int argc, char* argv[])
   //the -c option means to give the number of solution for a game
   else if(strcmp("-c", argv[1]) == 0)
   {
-    return EXIT_SUCCESS;
+    printf("> action: number of solutions\n");
+    uint sol =game_nb_solutions(g);
+    printf("Number of solutions: %u\n", sol);
   }
 
   else //Not a correct option

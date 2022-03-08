@@ -164,42 +164,56 @@ bool game_solve(game g)
   }
 }
 
-uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g)
+uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g, int * change)
 {
   if (coord_i == game_nb_rows(g) && coord_j==0) {
     if (game_is_over(g)) {
-      (*nb_sol)++;
+      if((*change) == 1)
+      {
+        (*nb_sol)++;
+        (*change) = 0;
+        
+      }
     }
     return (*nb_sol);
   }
 
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j)) {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
+    (*change) = true;
   }
 
   if (coord_j == game_nb_cols(g)-1) {
-    return game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g);
+    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, change);
   }else{
-    return game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
+    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, change);
   }
 
   if (game_check_move(g, coord_i, coord_j, S_BLANK)) {
-    game_play_move(g, coord_i, coord_j, S_BLANK);
+    if (game_get_square(g, coord_i, coord_j) != S_BLANK)
+    {
+      game_play_move(g, coord_i, coord_j, S_BLANK);
+      (*change) = 1;
+    }
   }
 
   if(coord_j==game_nb_cols(g)-1){
-    return game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g);
-  }else{
-    return game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
+    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, change);
+  }
+  else{
+    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, change);
   }
 
+  return (*nb_sol);
 }
 
 uint game_nb_solutions(cgame g)
 {
   assert(g);
   game copy = game_copy(g);
+  //game copy2 = game_copy(g);
   uint nb_sol = 0;
+  int * change = 0;
 
-  return game_nb_solutions_aux(0, 0, &nb_sol, copy);
+  return game_nb_solutions_aux(0, 0, &nb_sol, copy, change);
 }

@@ -114,6 +114,7 @@ struct test tests[] = {  // dummy test
     {"game_save", test_game_save},
     {"game_load", test_game_load},
     {"game_solve",test_game_solve},
+    {"game_nb_solution",test_game_nb_solution},
 
     // end
     {NULL, NULL}};
