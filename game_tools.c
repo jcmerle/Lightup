@@ -9,7 +9,8 @@
 #include "game_private.h"
 #include "game_test.h"
 
-game game_load(char* filename) {
+game game_load(char* filename)
+{
   FILE* file = fopen(filename, "r");
   if (file == NULL) {
     fprintf(stderr, "no file\n");
@@ -56,7 +57,8 @@ game game_load(char* filename) {
   return g;
 }
 
-void game_save(cgame g, char* filename) {
+void game_save(cgame g, char* filename)
+{
   if (g == NULL) {
     fprintf(stderr, "g null\n");
     exit(EXIT_FAILURE);
@@ -89,8 +91,8 @@ void game_save(cgame g, char* filename) {
   fclose(file);
 }
 
-bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j,
-                    game g) {
+bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
+{
   // Recurrence stop condition
   if (coord_i == nb_rows && coord_j == 0) {
     return game_is_over(g);
@@ -109,8 +111,7 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j,
 
   // We put a lightbulb in the squares which are not lighted (optimisation of
   // the algorithm)
-  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) &&
-      !game_is_lighted(g, coord_i, coord_j)) {
+  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j)) {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
   }
 
@@ -149,7 +150,8 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j,
   return false;
 }
 
-bool game_solve(game g) {
+bool game_solve(game g)
+{
   assert(g);
   game copy = game_copy(g);
 
@@ -164,52 +166,36 @@ bool game_solve(game g) {
   }
 }
 
-uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g,
-                           int* change) {
-  if (coord_i == game_nb_rows(g) && coord_j == 0) {
+uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g)
+{
+  if (coord_i == game_nb_rows(g)) {
     if (game_is_over(g)) {
-      if ((*change) == 1) {
-        (*nb_sol)++;
-        (*change) = 0;
-      }
+      (*nb_sol)++;
     }
     return (*nb_sol);
   }
 
-  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) &&
-      !game_is_lighted(g, coord_i, coord_j)) {
-    game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
-    (*change) = true;
+  if (coord_j == game_nb_cols(g)) {
+    return game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g);
   }
 
-  if (coord_j == game_nb_cols(g) - 1) {
-    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, change);
-  } else {
-    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, change);
+  if (game_is_black(g, coord_i, coord_j)) {
+    return game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
   }
 
-  if (game_check_move(g, coord_i, coord_j, S_BLANK)) {
-    if (game_get_square(g, coord_i, coord_j) != S_BLANK) {
-      game_play_move(g, coord_i, coord_j, S_BLANK);
-      (*change) = 1;
-    }
-  }
-
-  if (coord_j == game_nb_cols(g) - 1) {
-    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, change);
-  } else {
-    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, change);
-  }
-
-  return (*nb_sol);
+  game_play_move(g, coord_i, coord_j, S_BLANK);
+  game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
+  game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
+  return game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
 }
 
-uint game_nb_solutions(cgame g) {
+uint game_nb_solutions(cgame g)
+{
   assert(g);
   game copy = game_copy(g);
   // game copy2 = game_copy(g);
   uint nb_sol = 0;
-  int* change = 0;
+  // int* change = 0;
 
-  return game_nb_solutions_aux(0, 0, &nb_sol, copy, change);
+  return game_nb_solutions_aux(0, 0, &nb_sol, copy);
 }

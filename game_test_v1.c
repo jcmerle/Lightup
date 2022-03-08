@@ -20,7 +20,8 @@
 /*                            BASIC TESTS (V1)                                */
 /* ************************************************************************** */
 
-int test_new(void) {
+int test_new(void)
+{
   game g = game_new(default_squares);
   bool test0 = check_game(g, default_squares);
   game_delete(g);
@@ -30,7 +31,8 @@ int test_new(void) {
 
 /* ************************************************************************** */
 
-int test_new_empty(void) {
+int test_new_empty(void)
+{
   game g = game_new_empty();
   bool test0 = check_game(g, NULL);
   game_delete(g);
@@ -41,7 +43,8 @@ int test_new_empty(void) {
 
 /* ************************************************************************** */
 
-int test_copy(void) {
+int test_copy(void)
+{
   // game empty
   game g1 = game_new_empty();
   game g2 = game_copy(g1);
@@ -76,7 +79,8 @@ int test_copy(void) {
 
 /* ************************************************************************** */
 
-int test_equal(void) {
+int test_equal(void)
+{
   game g1 = game_default();
   game g2 = game_default();
   game g3 = game_default();
@@ -101,7 +105,8 @@ int test_equal(void) {
 
 /* ************************************************************************** */
 
-int test_delete(void) {
+int test_delete(void)
+{
   game g = game_new_empty();
   game_delete(g);  // nothing else to do...
   return EXIT_SUCCESS;
@@ -109,7 +114,8 @@ int test_delete(void) {
 
 /* ************************************************************************** */
 
-int test_set_square(void) {
+int test_set_square(void)
+{
   game g = game_default();
   game_set_square(g, 0, 0, S_LIGHTBULB);
   game_set_square(g, 0, 2, S_BLANK);  // overwrite wall
@@ -135,7 +141,8 @@ int test_set_square(void) {
 
 /* ************************************************************************** */
 
-int test_get_square(void) {
+int test_get_square(void)
+{
   game g = game_new(other_squares);
   square s1 = game_get_square(g, 0, 0);
   square s2 = game_get_square(g, 0, 1);
@@ -154,7 +161,8 @@ int test_get_square(void) {
 
 /* ************************************************************************** */
 
-int test_get_state(void) {
+int test_get_state(void)
+{
   game g = game_new(other_squares);
   square s1 = game_get_state(g, 0, 0);
   square s2 = game_get_state(g, 0, 1);
@@ -171,7 +179,8 @@ int test_get_state(void) {
 
 /* ************************************************************************** */
 
-int test_get_flags(void) {
+int test_get_flags(void)
+{
   game g = game_new(other_squares);
   square s1 = game_get_flags(g, 0, 0);
   square s2 = game_get_flags(g, 0, 1);
@@ -188,11 +197,11 @@ int test_get_flags(void) {
 
 /* ************************************************************************** */
 
-int test_is_state(void) {
+int test_is_state(void)
+{
   game g = game_new(other_squares);
   bool test1 = game_is_lightbulb(g, 0, 0) && !game_is_lightbulb(g, 0, 1);
-  bool test2 = game_is_black(g, 0, 2) && game_is_black(g, 2, 5) &&
-               !game_is_black(g, 0, 1);
+  bool test2 = game_is_black(g, 0, 2) && game_is_black(g, 2, 5) && !game_is_black(g, 0, 1);
   bool test3 = game_is_blank(g, 0, 1) && !game_is_blank(g, 0, 0);
   bool test4 = game_is_marked(g, 6, 6) && !game_is_marked(g, 0, 0);
   bool test5 = (game_get_black_number(g, 0, 2) == 1) &&  //
@@ -205,12 +214,11 @@ int test_is_state(void) {
 
 /* ************************************************************************** */
 
-int test_has_flag(void) {
+int test_has_flag(void)
+{
   game g = game_new(other_squares);
-  bool test1 = (game_is_lighted(g, 0, 0) && game_is_lighted(g, 0, 1) &&
-                !game_is_lighted(g, 1, 1));
-  bool test2 = (game_has_error(g, 0, 0) && game_has_error(g, 2, 6) &&
-                !game_has_error(g, 0, 1));
+  bool test1 = (game_is_lighted(g, 0, 0) && game_is_lighted(g, 0, 1) && !game_is_lighted(g, 1, 1));
+  bool test2 = (game_has_error(g, 0, 0) && game_has_error(g, 2, 6) && !game_has_error(g, 0, 1));
   game_delete(g);
   if (test1 && test2) return EXIT_SUCCESS;
   return EXIT_FAILURE;
@@ -218,7 +226,8 @@ int test_has_flag(void) {
 
 /* ************************************************************************** */
 
-int test_play_move(void) {
+int test_play_move(void)
+{
   // other
   game g0 = game_default();
   game_play_move(g0, 0, 0, S_LIGHTBULB);
@@ -255,7 +264,8 @@ in the grid. More precisely, a move is said to be legal: 1) if the coordinates
 (i,j) are inside the grid, 2) if s is either a blank, light bulb or mark square,
 and 3) if the current square at (i,j) is not a black square. */
 
-int test_check_move(void) {
+int test_check_move(void)
+{
   game g0 = game_new(other_squares);
 
   // some legal moves
@@ -264,10 +274,9 @@ int test_check_move(void) {
                game_check_move(g0, 1, 1, S_MARK);
 
   // no flags
-  bool test1 =
-      !game_check_move(g0, 1, 1, S_LIGHTBULB | F_LIGHTED | F_ERROR) &&  //
-      !game_check_move(g0, 0, 0, S_BLANK | F_LIGHTED) &&                //
-      !game_check_move(g0, 1, 1, S_MARK | F_ERROR);
+  bool test1 = !game_check_move(g0, 1, 1, S_LIGHTBULB | F_LIGHTED | F_ERROR) &&  //
+               !game_check_move(g0, 0, 0, S_BLANK | F_LIGHTED) &&                //
+               !game_check_move(g0, 1, 1, S_MARK | F_ERROR);
 
   // try to overwrite black wall
   bool test2 = !game_check_move(g0, 0, 2, S_LIGHTBULB) &&  //
@@ -284,7 +293,8 @@ int test_check_move(void) {
 
 /* ************************************************************************** */
 
-int test_is_over(void) {
+int test_is_over(void)
+{
   // default game
   game g1 = game_default();
   bool test1 = (game_is_over(g1) == false);
@@ -323,7 +333,8 @@ int test_is_over(void) {
 
 /* ************************************************************************** */
 
-int test_restart(void) {
+int test_restart(void)
+{
   // default solution
   game g1 = game_default_solution();
   game_restart(g1);
@@ -342,7 +353,8 @@ int test_restart(void) {
 
 /* ************************************************************************** */
 
-int test_update_flags(void) {
+int test_update_flags(void)
+{
   // test error flags both on lightbulb and black wall
   game g0 = game_default();
   game_set_square(g0, 0, 0, S_LIGHTBULB);

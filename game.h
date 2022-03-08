@@ -43,7 +43,7 @@ typedef enum {
   S_BLACK2,           /**< a numbered black wall (with 2 adjacent lights) */
   S_BLACK3,           /**< a numbered black wall (with 3 adjacent lights) */
   S_BLACK4,           /**< a numbered black wall (with 4 adjacent lights) */
-  S_BLACKU, /**< an unnumbered black wall (any number of adjacent lights) */
+  S_BLACKU,           /**< an unnumbered black wall (any number of adjacent lights) */
   /* flags */
   F_LIGHTED = 16, /**< lighted flag */
   F_ERROR = 32    /**< error flag */

@@ -18,7 +18,8 @@
 /*                                 GAME EXT                                   */
 /* ************************************************************************** */
 
-game game_new_ext(uint nb_rows, uint nb_cols, square* squares, bool wrapping) {
+game game_new_ext(uint nb_rows, uint nb_cols, square* squares, bool wrapping)
+{
   game g = game_new_empty_ext(nb_rows, nb_cols, wrapping);
   assert(g);
   // set squares
@@ -32,7 +33,8 @@ game game_new_ext(uint nb_rows, uint nb_cols, square* squares, bool wrapping) {
 
 /* ************************************************************************** */
 
-game game_new_empty_ext(uint nb_rows, uint nb_cols, bool wrapping) {
+game game_new_empty_ext(uint nb_rows, uint nb_cols, bool wrapping)
+{
   game g = (game)malloc(sizeof(struct game_s));
   assert(g);
   g->nb_rows = nb_rows;
@@ -63,7 +65,8 @@ bool game_is_wrapping(cgame g) { return g->wrapping; }
 
 /* ************************************************************************** */
 
-void game_undo(game g) {
+void game_undo(game g)
+{
   assert(g);
   if (_stack_is_empty(g->undo_stack)) return;
   move m = _stack_pop_move(g->undo_stack);
@@ -74,7 +77,8 @@ void game_undo(game g) {
 
 /* ************************************************************************** */
 
-void game_redo(game g) {
+void game_redo(game g)
+{
   assert(g);
   if (_stack_is_empty(g->redo_stack)) return;
   move m = _stack_pop_move(g->redo_stack);

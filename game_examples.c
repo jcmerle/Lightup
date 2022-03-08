@@ -28,58 +28,37 @@
 /* ************************************************************************** */
 
 square default_squares[] = {
-    S_BLANK,  S_BLANK,  S_BLACK1, S_BLANK,
-    S_BLANK,  S_BLANK,  S_BLANK, /* row 0 */
-    S_BLANK,  S_BLANK,  S_BLACK2, S_BLANK,
-    S_BLANK,  S_BLANK,  S_BLANK, /* row 1 */
-    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
-    S_BLANK,  S_BLACKU, S_BLACK2, /* row 2 */
-    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
-    S_BLANK,  S_BLANK,  S_BLANK, /* row 3 */
-    S_BLACK1, S_BLACKU, S_BLANK,  S_BLANK,
-    S_BLANK,  S_BLANK,  S_BLANK, /* row 4 */
-    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
-    S_BLACK2, S_BLANK,  S_BLANK, /* row 5 */
-    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
-    S_BLACKU, S_BLANK,  S_BLANK, /* row 6 */
+    S_BLANK,  S_BLANK,  S_BLACK1, S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 0 */
+    S_BLANK,  S_BLANK,  S_BLACK2, S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 1 */
+    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLANK,  S_BLACKU, S_BLACK2, /* row 2 */
+    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 3 */
+    S_BLACK1, S_BLACKU, S_BLANK,  S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 4 */
+    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLACK2, S_BLANK,  S_BLANK,  /* row 5 */
+    S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLACKU, S_BLANK,  S_BLANK,  /* row 6 */
 };
 
 /* ************************************************************************** */
 
 square solution_squares[] = {
-    LIGHTEDBULB, F_LIGHTED,   S_BLACK1,    LIGHTEDBULB,
-    F_LIGHTED,   F_LIGHTED,   F_LIGHTED, /* row 0 */
-    F_LIGHTED,   LIGHTEDBULB, S_BLACK2,    F_LIGHTED,
-    F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, /* row 1 */
-    F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, F_LIGHTED,
-    F_LIGHTED,   S_BLACKU,    S_BLACK2, /* row 2 */
-    F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   F_LIGHTED,
-    F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, /* row 3 */
-    S_BLACK1,    S_BLACKU,    F_LIGHTED,   F_LIGHTED,
-    LIGHTEDBULB, F_LIGHTED,   F_LIGHTED, /* row 4 */
-    LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,   F_LIGHTED,
-    S_BLACK2,    LIGHTEDBULB, F_LIGHTED, /* row 5 */
-    F_LIGHTED,   LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,
-    S_BLACKU,    F_LIGHTED,   F_LIGHTED, /* row 6 */
+    LIGHTEDBULB, F_LIGHTED,   S_BLACK1,    LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   /* row 0 */
+    F_LIGHTED,   LIGHTEDBULB, S_BLACK2,    F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, /* row 1 */
+    F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,   S_BLACKU,    S_BLACK2,    /* row 2 */
+    F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, /* row 3 */
+    S_BLACK1,    S_BLACKU,    F_LIGHTED,   F_LIGHTED,   LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,   /* row 4 */
+    LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,   F_LIGHTED,   S_BLACK2,    LIGHTEDBULB, F_LIGHTED,   /* row 5 */
+    F_LIGHTED,   LIGHTEDBULB, F_LIGHTED,   F_LIGHTED,   S_BLACKU,    F_LIGHTED,   F_LIGHTED,   /* row 6 */
 };
 
 /* ************************************************************************** */
 
 square other_squares[] = {
-    LIGHTEDBULBERR, F_LIGHTED, S_BLACK1,  S_BLANK,
-    S_BLANK,        S_BLANK,   S_BLANK, /* row 0 */
-    F_LIGHTED,      S_BLANK,   S_BLACK2,  S_BLANK,
-    S_BLANK,        S_BLANK,   S_BLANK, /* row 1 */
-    F_LIGHTED,      S_BLANK,   S_BLANK,   S_BLANK,
-    S_BLANK,        S_BLACKU,  BLACK2ERR, /* row 2 */
-    LIGHTEDBULBERR, F_LIGHTED, F_LIGHTED, F_LIGHTED,
-    F_LIGHTED,      F_LIGHTED, F_LIGHTED, /* row 3 */
-    S_BLACK1,       S_BLACKU,  S_BLANK,   S_BLANK,
-    S_BLANK,        S_BLANK,   S_BLANK, /* row 4 */
-    S_BLANK,        S_BLANK,   S_BLANK,   S_BLANK,
-    S_BLACK2,       S_BLANK,   S_BLANK, /* row 5 */
-    S_BLANK,        S_BLANK,   S_BLANK,   S_BLANK,
-    S_BLACKU,       S_BLANK,   S_MARK, /* row 6 */
+    LIGHTEDBULBERR, F_LIGHTED, S_BLACK1,  S_BLANK,   S_BLANK,   S_BLANK,   S_BLANK,   /* row 0 */
+    F_LIGHTED,      S_BLANK,   S_BLACK2,  S_BLANK,   S_BLANK,   S_BLANK,   S_BLANK,   /* row 1 */
+    F_LIGHTED,      S_BLANK,   S_BLANK,   S_BLANK,   S_BLANK,   S_BLACKU,  BLACK2ERR, /* row 2 */
+    LIGHTEDBULBERR, F_LIGHTED, F_LIGHTED, F_LIGHTED, F_LIGHTED, F_LIGHTED, F_LIGHTED, /* row 3 */
+    S_BLACK1,       S_BLACKU,  S_BLANK,   S_BLANK,   S_BLANK,   S_BLANK,   S_BLANK,   /* row 4 */
+    S_BLANK,        S_BLANK,   S_BLANK,   S_BLANK,   S_BLACK2,  S_BLANK,   S_BLANK,   /* row 5 */
+    S_BLANK,        S_BLANK,   S_BLANK,   S_BLANK,   S_BLACKU,  S_BLANK,   S_MARK,    /* row 6 */
 };
 
 /* ************************************************************************** */

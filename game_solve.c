@@ -6,14 +6,14 @@
 #include "game_aux.h"
 #include "game_tools.h"
 
-void usage(char* string) {
-  fprintf(stderr,
-          "./%s <option> <input> [<output>], the last parameter is optional\n",
-          string);
+void usage(char* string)
+{
+  fprintf(stderr, "./%s <option> <input> [<output>], the last parameter is optional\n", string);
   fprintf(stderr, "<option> can be -s or -c\n");
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   game g = NULL;
   // the executable must have 3 or 4 parameters
   if (argc <= 2 || argc > 4) {

@@ -50,17 +50,7 @@ struct move_s {
 
 typedef struct move_s move;
 
-typedef enum {
-  HERE,
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  UP_LEFT,
-  UP_RIGHT,
-  DOWN_LEFT,
-  DOWN_RIGHT
-} direction;
+typedef enum { HERE, UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT } direction;
 
 /* ************************************************************************** */
 /*                                MACRO                                       */

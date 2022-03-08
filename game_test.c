@@ -20,8 +20,8 @@
 /* ************************************************************************** */
 
 /* if squares == NULL, test if game is empty */
-bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square* squares,
-                    bool wrapping) {
+bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square* squares, bool wrapping)
+{
   if (!g) return false;
 
   // nb rows & cols
@@ -44,15 +44,14 @@ bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square* squares,
 
 /* ************************************************************************** */
 
-bool check_game(game g, square* squares) {
-  return check_game_ext(g, DEFAULT_SIZE, DEFAULT_SIZE, squares, false);
-}
+bool check_game(game g, square* squares) { return check_game_ext(g, DEFAULT_SIZE, DEFAULT_SIZE, squares, false); }
 
 /* ************************************************************************** */
 /*                                MAIN ROUTINE                                */
 /* ************************************************************************** */
 
-static void usage(int argc, char* argv[]) {
+static void usage(int argc, char* argv[])
+{
   assert(argc > 0);
   fprintf(stderr, "Usage: %s <testname>\n", argv[0]);
   exit(EXIT_FAILURE);
@@ -122,7 +121,8 @@ struct test tests[] = {  // dummy test
 
 /* ************************************************************************** */
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   // run test
   if (argc == 1) usage(argc, argv);
   int ret = -1;
