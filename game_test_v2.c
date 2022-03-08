@@ -21,8 +21,7 @@
 /*                              EXT TESTS (V2)                                */
 /* ************************************************************************** */
 
-int test_new_ext(void)
-{
+int test_new_ext(void) {
   game g0 = game_new_ext(4, 4, ext_4x4_squares, false);
   bool test0 = check_game_ext(g0, 4, 4, ext_4x4_squares, false);
   game_delete(g0);
@@ -42,8 +41,7 @@ int test_new_ext(void)
 
 /* ************************************************************************** */
 
-int test_new_empty_ext(void)
-{
+int test_new_empty_ext(void) {
   game g0 = game_new_empty_ext(4, 4, false);
   bool test0 = check_game_ext(g0, 4, 4, NULL, false);
   game_delete(g0);
@@ -54,8 +52,7 @@ int test_new_empty_ext(void)
 
 /* ************************************************************************** */
 
-int test_equal_ext(void)
-{
+int test_equal_ext(void) {
   game g1 = game_new_ext(3, 10, ext_3x10_squares, false);
   game g2 = game_new_ext(3, 10, ext_3x10_squares, false);
   game g3 = game_new_ext(3, 10, ext_3x10_squares, true);
@@ -80,8 +77,7 @@ int test_equal_ext(void)
 
 /* ************************************************************************** */
 
-int test_copy_ext(void)
-{
+int test_copy_ext(void) {
   // game empty 3x5w
   game g1 = game_new_empty_ext(3, 5, true);
   game g2 = game_copy(g1);
@@ -102,8 +98,7 @@ int test_copy_ext(void)
 
 /* ************************************************************************** */
 
-int test_game_1d(void)
-{
+int test_game_1d(void) {
   // try to win this game
   game g0 = game_new_ext(5, 1, ext_5x1_squares, false);
   bool test0 = check_game_ext(g0, 5, 1, ext_5x1_squares, false);
@@ -119,8 +114,7 @@ int test_game_1d(void)
 
 /* ************************************************************************** */
 
-int test_game_wrapping_5x3(void)
-{
+int test_game_wrapping_5x3(void) {
   // try to win a game with wrapping option
   game g0 = game_new_ext(5, 3, ext_5x3w_squares, true);
   bool test0 = check_game_ext(g0, 5, 3, ext_5x3w_squares, true);
@@ -137,8 +131,7 @@ int test_game_wrapping_5x3(void)
 
 /* ************************************************************************** */
 
-int test_game_wrapping_3x3(void)
-{
+int test_game_wrapping_3x3(void) {
   // try to win a game with wrapping option
   game g0 = game_new_ext(3, 3, ext_3x3w_squares, true);
   bool test0 = check_game_ext(g0, 3, 3, ext_3x3w_squares, true);
@@ -163,8 +156,7 @@ int test_game_wrapping_3x3(void)
 
 /* ************************************************************************** */
 
-int test_game_wrapping_2x2(void)
-{
+int test_game_wrapping_2x2(void) {
   // check really dummy 2x2 board with wrapping option
   game g0 = game_new_ext(2, 2, ext_2x2w_squares, true);
   bool test0 = check_game_ext(g0, 2, 2, ext_2x2w_squares, true);
@@ -188,8 +180,7 @@ int test_game_wrapping_2x2(void)
 
 /* ************************************************************************** */
 
-int test_game_wrapping_error(void)
-{
+int test_game_wrapping_error(void) {
   // check error flags on lightbulb with wrapping
   game g1 = game_new_empty_ext(3, 3, true);
   game_set_square(g1, 1, 1, S_BLACKU);
@@ -233,8 +224,7 @@ int test_game_wrapping_error(void)
 
 /* ************************************************************************** */
 
-int test_undo_one(void)
-{
+int test_undo_one(void) {
   // undo a one move of default solution
   game g0 = game_default();
   game_play_move(g0, 0, 0, S_LIGHTBULB);
@@ -247,7 +237,8 @@ int test_undo_one(void)
   game_play_move(g0, 5, 0, S_LIGHTBULB);
   bool test0 = (game_get_square(g0, 6, 0) == F_LIGHTED);
   game_play_move(g0, 6, 0, S_LIGHTBULB);  // bad move
-  bool test1 = (game_get_square(g0, 6, 0) == (S_LIGHTBULB | F_LIGHTED | F_ERROR));
+  bool test1 =
+      (game_get_square(g0, 6, 0) == (S_LIGHTBULB | F_LIGHTED | F_ERROR));
   game_undo(g0);  // undo it
   bool test2 = (game_get_square(g0, 6, 0) == F_LIGHTED);
   game_play_move(g0, 6, 1, S_LIGHTBULB);
@@ -260,8 +251,7 @@ int test_undo_one(void)
 
 /* ************************************************************************** */
 
-int test_undo_redo_some(void)
-{
+int test_undo_redo_some(void) {
   // undo & redo some moves
   game g0 = game_default();
   game_play_move(g0, 0, 0, S_LIGHTBULB);
@@ -287,8 +277,7 @@ int test_undo_redo_some(void)
 
 /* ************************************************************************** */
 
-int test_undo_redo_all(void)
-{
+int test_undo_redo_all(void) {
   // undo & redo all moves
   game g1 = game_default();
   bool test1 = check_game(g1, default_squares);
@@ -315,8 +304,7 @@ int test_undo_redo_all(void)
 
 /* ************************************************************************** */
 
-int test_restart_undo(void)
-{
+int test_restart_undo(void) {
   game g0 = game_default();
   game_play_move(g0, 0, 0, S_LIGHTBULB);
   game_play_move(g0, 1, 1, S_LIGHTBULB);
@@ -334,8 +322,7 @@ int test_restart_undo(void)
 /*                           GAME_TOOLS TESTS                         */
 /* ************************************************************************** */
 
-int test_game_save(void)
-{
+int test_game_save(void) {
   game g0 = game_default();
   game_play_move(g0, 0, 0, S_LIGHTBULB);
   game_play_move(g0, 1, 1, S_LIGHTBULB);
@@ -356,8 +343,7 @@ int test_game_save(void)
   return EXIT_FAILURE;
 }
 
-int test_game_load(void)
-{
+int test_game_load(void) {
   game g0 = game_default();
   game_play_move(g0, 0, 0, S_LIGHTBULB);
   game_play_move(g0, 1, 1, S_LIGHTBULB);
@@ -378,30 +364,27 @@ int test_game_load(void)
   return EXIT_FAILURE;
 }
 
-int test_game_solve(void)
-{
-  //We load a 3x10 game which is huge 
-  //to really see the performance 
-  //of the game_solve function
+int test_game_solve(void) {
+  // We load a 3x10 game which is huge
+  // to really see the performance
+  // of the game_solve function
   game g = game_load("../examples/game_3x10.txt");
   game_solve(g);
 
-  if(!game_is_over(g))
-  {
+  if (!game_is_over(g)) {
     return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
 }
 
-int test_game_nb_solution(void)
-{
-  //We load a 3x10 game which is huge 
-  //to really see the performance 
-  //of the game_solve function
+int test_game_nb_solution(void) {
+  // We load a 3x10 game which is huge
+  // to really see the performance
+  // of the game_solve function
   game g = game_load("../examples/game_td11.txt");
   printf("> action: number of solutions\n");
-  uint sol =game_nb_solutions(g);
+  uint sol = game_nb_solutions(g);
   printf("Number of solutions: %u\n", sol);
 
   return EXIT_SUCCESS;

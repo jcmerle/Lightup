@@ -16,8 +16,7 @@
 
 /* ************************************************************************** */
 
-void game_print(cgame g)
-{
+void game_print(cgame g) {
   assert(g);
   printf("   ");
   for (uint j = 0; j < game_nb_cols(g); j++) printf("%d", j);
@@ -42,24 +41,29 @@ void game_print(cgame g)
 /* ************************************************************************** */
 
 // https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/lightup.html#7x7:b1f2iB2g1Bi2fBb
-game game_default(void)
-{
+game game_default(void) {
   square squares[] = {
-      S_BLANK,  S_BLANK,  S_BLACK1, S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 0 */
-      S_BLANK,  S_BLANK,  S_BLACK2, S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 1 */
-      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLANK,  S_BLACKU, S_BLACK2, /* row 2 */
-      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 3 */
-      S_BLACK1, S_BLACKU, S_BLANK,  S_BLANK, S_BLANK,  S_BLANK,  S_BLANK,  /* row 4 */
-      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLACK2, S_BLANK,  S_BLANK,  /* row 5 */
-      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK, S_BLACKU, S_BLANK,  S_BLANK,  /* row 6 */
+      S_BLANK,  S_BLANK,  S_BLACK1, S_BLANK,
+      S_BLANK,  S_BLANK,  S_BLANK, /* row 0 */
+      S_BLANK,  S_BLANK,  S_BLACK2, S_BLANK,
+      S_BLANK,  S_BLANK,  S_BLANK, /* row 1 */
+      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
+      S_BLANK,  S_BLACKU, S_BLACK2, /* row 2 */
+      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
+      S_BLANK,  S_BLANK,  S_BLANK, /* row 3 */
+      S_BLACK1, S_BLACKU, S_BLANK,  S_BLANK,
+      S_BLANK,  S_BLANK,  S_BLANK, /* row 4 */
+      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
+      S_BLACK2, S_BLANK,  S_BLANK, /* row 5 */
+      S_BLANK,  S_BLANK,  S_BLANK,  S_BLANK,
+      S_BLACKU, S_BLANK,  S_BLANK, /* row 6 */
   };
   return game_new(squares);
 }
 
 /* ************************************************************************** */
 
-game game_default_solution(void)
-{
+game game_default_solution(void) {
   game g = game_default();
   game_play_move(g, 0, 0, S_LIGHTBULB);
   game_play_move(g, 1, 1, S_LIGHTBULB);

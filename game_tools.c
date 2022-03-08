@@ -9,8 +9,7 @@
 #include "game_private.h"
 #include "game_test.h"
 
-game game_load(char* filename)
-{
+game game_load(char* filename) {
   FILE* file = fopen(filename, "r");
   if (file == NULL) {
     fprintf(stderr, "no file\n");
@@ -57,8 +56,7 @@ game game_load(char* filename)
   return g;
 }
 
-void game_save(cgame g, char* filename)
-{
+void game_save(cgame g, char* filename) {
   if (g == NULL) {
     fprintf(stderr, "g null\n");
     exit(EXIT_FAILURE);
@@ -91,16 +89,16 @@ void game_save(cgame g, char* filename)
   fclose(file);
 }
 
-bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
-{
+bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j,
+                    game g) {
   // Recurrence stop condition
   if (coord_i == nb_rows && coord_j == 0) {
     return game_is_over(g);
   }
 
-  // Double loop to see if the game has an error and so if it is necessary to continue
-  // if the game has an error we stop and return false.
-  // It is a really effective optimisation
+  // Double loop to see if the game has an error and so if it is necessary to
+  // continue if the game has an error we stop and return false. It is a really
+  // effective optimisation
   for (int y = 0; y < nb_rows; y++) {
     for (int x = 0; x < nb_cols; x++) {
       if (game_has_error(g, y, x)) {
@@ -109,12 +107,15 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
     }
   }
 
-  // We put a lightbulb in the squares which are not lighted (optimisation of the algorithm)
-  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j)) {
+  // We put a lightbulb in the squares which are not lighted (optimisation of
+  // the algorithm)
+  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) &&
+      !game_is_lighted(g, coord_i, coord_j)) {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
   }
 
-  // we call the function on the next square which depends of the current position
+  // we call the function on the next square which depends of the current
+  // position
   if (coord_j == nb_cols - 1) {
     if (game_solve_aux(nb_rows, nb_cols, coord_i + 1, 0, g)) {
       return true;
@@ -148,8 +149,7 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
   return false;
 }
 
-bool game_solve(game g)
-{
+bool game_solve(game g) {
   assert(g);
   game copy = game_copy(g);
 
@@ -164,56 +164,52 @@ bool game_solve(game g)
   }
 }
 
-uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g, int * change)
-{
-  if (coord_i == game_nb_rows(g) && coord_j==0) {
+uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g,
+                           int* change) {
+  if (coord_i == game_nb_rows(g) && coord_j == 0) {
     if (game_is_over(g)) {
-      if((*change) == 1)
-      {
+      if ((*change) == 1) {
         (*nb_sol)++;
         (*change) = 0;
-        
       }
     }
     return (*nb_sol);
   }
 
-  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j)) {
+  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) &&
+      !game_is_lighted(g, coord_i, coord_j)) {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
     (*change) = true;
   }
 
-  if (coord_j == game_nb_cols(g)-1) {
+  if (coord_j == game_nb_cols(g) - 1) {
     game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, change);
-  }else{
+  } else {
     game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, change);
   }
 
   if (game_check_move(g, coord_i, coord_j, S_BLANK)) {
-    if (game_get_square(g, coord_i, coord_j) != S_BLANK)
-    {
+    if (game_get_square(g, coord_i, coord_j) != S_BLANK) {
       game_play_move(g, coord_i, coord_j, S_BLANK);
       (*change) = 1;
     }
   }
 
-  if(coord_j==game_nb_cols(g)-1){
+  if (coord_j == game_nb_cols(g) - 1) {
     game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, change);
-  }
-  else{
+  } else {
     game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, change);
   }
 
   return (*nb_sol);
 }
 
-uint game_nb_solutions(cgame g)
-{
+uint game_nb_solutions(cgame g) {
   assert(g);
   game copy = game_copy(g);
-  //game copy2 = game_copy(g);
+  // game copy2 = game_copy(g);
   uint nb_sol = 0;
-  int * change = 0;
+  int* change = 0;
 
   return game_nb_solutions_aux(0, 0, &nb_sol, copy, change);
 }

@@ -17,13 +17,14 @@
 
 /* ************************************************************************** */
 
-static void game_print_errors(game g)
-{
+static void game_print_errors(game g) {
   for (uint i = 0; i < game_nb_rows(g); i++) {
     for (uint j = 0; j < game_nb_cols(g); j++) {
       if (game_has_error(g, i, j)) {
-        if (game_is_lightbulb(g, i, j)) printf("Error at light bulb (%d,%d)\n", i, j);
-        if (game_is_black(g, i, j)) printf("Error at black wall (%d,%d)\n", i, j);
+        if (game_is_lightbulb(g, i, j))
+          printf("Error at light bulb (%d,%d)\n", i, j);
+        if (game_is_black(g, i, j))
+          printf("Error at black wall (%d,%d)\n", i, j);
       }
     }
   }
@@ -31,8 +32,7 @@ static void game_print_errors(game g)
 
 /* ************************************************************************** */
 
-static bool game_step(game g)
-{
+static bool game_step(game g) {
   printf("> ? [h for help]\n");
   // <action> [<row> <col>]
   char c = '?';
@@ -72,6 +72,10 @@ static bool game_step(game g)
     char file[100] = "";
     scanf("%s", file);
     game_save(g, file);
+  } else if (c == 'c') {
+    printf("> action: number of solutions\n");
+    uint sol = game_nb_solutions(g);
+    printf("Number of solutions: %u\n", sol);
   } else if (c == 'q') {  // quit
     printf("> action: quit\n");
     return false;                                 // exit
@@ -104,8 +108,7 @@ static bool game_step(game g)
 
 /* ************************************************************************** */
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   game g = NULL;
   if (argc == 2)
     g = game_load(argv[1]);

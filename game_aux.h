@@ -23,7 +23,8 @@ void game_print(cgame g);
 /**
  * @brief Creates the default game.
  * @details See the description of the default game in @ref index.
- * @details https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/lightup.html#7x7:b1f2iB2g1Bi2fBb
+ * @details
+ *https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/lightup.html#7x7:b1f2iB2g1Bi2fBb
  * @return the created game
  **/
 game game_default(void);
@@ -31,7 +32,8 @@ game game_default(void);
 /**
  * @brief Creates the default game solution.
  * @details See the description of the default game in @ref index.
- * @details https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/lightup.html#7x7:b1f2iB2g1Bi2fBb
+ * @details
+ *https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/lightup.html#7x7:b1f2iB2g1Bi2fBb
  * @return the created game
  **/
 game game_default_solution(void);

@@ -18,8 +18,7 @@
 /*                                INTERNAL                                    */
 /* ************************************************************************** */
 
-static void _update_lighted_flags(game g, uint i, uint j)
-{
+static void _update_lighted_flags(game g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -50,8 +49,7 @@ static void _update_lighted_flags(game g, uint i, uint j)
 
 /* ************************************************************************** */
 
-static bool _check_lightbulb_error(cgame g, uint i, uint j)
-{
+static bool _check_lightbulb_error(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -80,8 +78,7 @@ static bool _check_lightbulb_error(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-static bool _check_blackwall_error(cgame g, uint i, uint j)
-{
+static bool _check_blackwall_error(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -90,12 +87,14 @@ static bool _check_blackwall_error(cgame g, uint i, uint j)
   if (s == S_BLACKU) return true; /* no constraint for unumbered wall */
   int expected = game_get_black_number(g, i, j);
   int nb_lightbulbs = _neigh_count(g, i, j, S_LIGHTBULB, S_MASK, false);
-  int nb_blanks = _neigh_count(g, i, j, S_BLANK, A_MASK, false);  // blank state, without lighted flag
+  int nb_blanks = _neigh_count(g, i, j, S_BLANK, A_MASK,
+                               false);  // blank state, without lighted flag
 
   // 1) too many lightbulbs
   if (nb_lightbulbs > expected) return false;
 
-  // 2) not enough blank squares (without lighted flag) to place the expected number of lightbulbs
+  // 2) not enough blank squares (without lighted flag) to place the expected
+  // number of lightbulbs
   if (nb_blanks < (expected - nb_lightbulbs)) return false;
 
   return true;
@@ -105,24 +104,26 @@ static bool _check_blackwall_error(cgame g, uint i, uint j)
 /*                                 GAME BASIC                                 */
 /* ************************************************************************** */
 
-game game_new(square* squares) { return game_new_ext(DEFAULT_SIZE, DEFAULT_SIZE, squares, false); }
+game game_new(square* squares) {
+  return game_new_ext(DEFAULT_SIZE, DEFAULT_SIZE, squares, false);
+}
 
 /* ************************************************************************** */
 
-game game_new_empty(void) { return game_new_empty_ext(DEFAULT_SIZE, DEFAULT_SIZE, false); }
+game game_new_empty(void) {
+  return game_new_empty_ext(DEFAULT_SIZE, DEFAULT_SIZE, false);
+}
 
 /* ************************************************************************** */
 
-game game_copy(cgame g)
-{
+game game_copy(cgame g) {
   game gg = game_new_ext(g->nb_rows, g->nb_cols, g->squares, g->wrapping);
   return gg;
 }
 
 /* ************************************************************************** */
 
-bool game_equal(cgame g1, cgame g2)
-{
+bool game_equal(cgame g1, cgame g2) {
   assert(g1 && g2);
 
   if (g1->nb_rows != g2->nb_rows) return false;
@@ -140,8 +141,7 @@ bool game_equal(cgame g1, cgame g2)
 
 /* ************************************************************************** */
 
-void game_delete(game g)
-{
+void game_delete(game g) {
   free(g->squares);
   queue_free_full(g->undo_stack, free);
   queue_free_full(g->redo_stack, free);
@@ -150,8 +150,7 @@ void game_delete(game g)
 
 /* ************************************************************************** */
 
-void game_set_square(game g, uint i, uint j, square s)
-{
+void game_set_square(game g, uint i, uint j, square s) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -160,8 +159,7 @@ void game_set_square(game g, uint i, uint j, square s)
 
 /* ************************************************************************** */
 
-square game_get_square(cgame g, uint i, uint j)
-{
+square game_get_square(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -170,8 +168,7 @@ square game_get_square(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-square game_get_state(cgame g, uint i, uint j)
-{
+square game_get_state(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -180,8 +177,7 @@ square game_get_state(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-square game_get_flags(cgame g, uint i, uint j)
-{
+square game_get_flags(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -190,8 +186,7 @@ square game_get_flags(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-void game_update_flags(game g)
-{
+void game_update_flags(game g) {
   assert(g);
 
   // 0) reset all flags
@@ -206,15 +201,16 @@ void game_update_flags(game g)
   // 2) update error flag
   for (uint i = 0; i < g->nb_rows; i++)
     for (uint j = 0; j < g->nb_cols; j++) {
-      if (game_is_lightbulb(g, i, j) && !_check_lightbulb_error(g, i, j)) SQUARE(g, i, j) |= F_ERROR;
-      if (game_is_black(g, i, j) && !_check_blackwall_error(g, i, j)) SQUARE(g, i, j) |= F_ERROR;
+      if (game_is_lightbulb(g, i, j) && !_check_lightbulb_error(g, i, j))
+        SQUARE(g, i, j) |= F_ERROR;
+      if (game_is_black(g, i, j) && !_check_blackwall_error(g, i, j))
+        SQUARE(g, i, j) |= F_ERROR;
     }
 }
 
 /* ************************************************************************** */
 
-bool game_check_move(cgame g, uint i, uint j, square s)
-{
+bool game_check_move(cgame g, uint i, uint j, square s) {
   assert(g);
   if (i > g->nb_rows - 1) return false;
   if (j > g->nb_cols - 1) return false;
@@ -227,8 +223,7 @@ bool game_check_move(cgame g, uint i, uint j, square s)
 
 /* ************************************************************************** */
 
-void game_play_move(game g, uint i, uint j, square s)
-{
+void game_play_move(game g, uint i, uint j, square s) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -249,8 +244,7 @@ void game_play_move(game g, uint i, uint j, square s)
 
 /* ************************************************************************** */
 
-bool game_is_over(cgame g)
-{
+bool game_is_over(cgame g) {
   assert(g);
 
   for (uint i = 0; i < g->nb_rows; i++)
@@ -267,8 +261,7 @@ bool game_is_over(cgame g)
 
 /* ************************************************************************** */
 
-void game_restart(game g)
-{
+void game_restart(game g) {
   assert(g);
 
   for (uint i = 0; i < g->nb_rows; i++)
@@ -287,8 +280,7 @@ void game_restart(game g)
 
 /* ************************************************************************** */
 
-bool game_is_blank(cgame g, uint i, uint j)
-{
+bool game_is_blank(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -299,8 +291,7 @@ bool game_is_blank(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-bool game_is_black(cgame g, uint i, uint j)
-{
+bool game_is_black(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -311,8 +302,7 @@ bool game_is_black(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-bool game_is_lightbulb(cgame g, uint i, uint j)
-{
+bool game_is_lightbulb(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -323,8 +313,7 @@ bool game_is_lightbulb(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-int game_get_black_number(cgame g, uint i, uint j)
-{
+int game_get_black_number(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -338,8 +327,7 @@ int game_get_black_number(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-bool game_is_marked(cgame g, uint i, uint j)
-{
+bool game_is_marked(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -350,8 +338,7 @@ bool game_is_marked(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-bool game_is_lighted(cgame g, uint i, uint j)
-{
+bool game_is_lighted(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
@@ -362,8 +349,7 @@ bool game_is_lighted(cgame g, uint i, uint j)
 
 /* ************************************************************************** */
 
-bool game_has_error(cgame g, uint i, uint j)
-{
+bool game_has_error(cgame g, uint i, uint j) {
   assert(g);
   assert(i < g->nb_rows);
   assert(j < g->nb_cols);
