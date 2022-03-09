@@ -113,7 +113,6 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
     return game_is_over(g);
   }
 
-<<<<<<< HEAD
   // Double loop to see if the game has an error and so if it is necessary to continue
   // if the game has an error we stop and return false.
   // It is a really effective optimisation
@@ -123,20 +122,11 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
     {
       if (game_has_error(g, y, x))
       {
-=======
-  // Double loop to see if the game has an error and so if it is necessary to
-  // continue if the game has an error we stop and return false. It is a really
-  // effective optimisation
-  for (int y = 0; y < nb_rows; y++) {
-    for (int x = 0; x < nb_cols; x++) {
-      if (game_has_error(g, y, x)) {
->>>>>>> 89f2ac09235418604fb617224269cb35d783526b
         return false;
       }
     }
   }
 
-<<<<<<< HEAD
   // We put a lightbulb in the squares which are not lighted (optimisation of the algorithm)
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
@@ -148,18 +138,6 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
   {
     if (game_solve_aux(nb_rows, nb_cols, coord_i + 1, 0, g))
     {
-=======
-  // We put a lightbulb in the squares which are not lighted (optimisation of
-  // the algorithm)
-  if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j)) {
-    game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
-  }
-
-  // we call the function on the next square which depends of the current
-  // position
-  if (coord_j == nb_cols - 1) {
-    if (game_solve_aux(nb_rows, nb_cols, coord_i + 1, 0, g)) {
->>>>>>> 89f2ac09235418604fb617224269cb35d783526b
       return true;
     }
   }
@@ -218,7 +196,6 @@ bool game_solve(game g)
   }
 }
 
-<<<<<<< HEAD
 game exact_copy_of(game g)
 {
   game copy = game_new_empty_ext(g->nb_rows, g->nb_cols, g->wrapping);
@@ -278,18 +255,10 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
         strcat(filename, strcat(string, ".txt"));
         game_save(g, filename);
       }
-=======
-uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g)
-{
-  if (coord_i == game_nb_rows(g)) {
-    if (game_is_over(g)) {
-      (*nb_sol)++;
->>>>>>> 89f2ac09235418604fb617224269cb35d783526b
     }
     return (*nb_sol);
   }
 
-<<<<<<< HEAD
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
@@ -319,14 +288,6 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g)
   else
   {
     game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
-=======
-  if (coord_j == game_nb_cols(g)) {
-    return game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g);
-  }
-
-  if (game_is_black(g, coord_i, coord_j)) {
-    return game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
->>>>>>> 89f2ac09235418604fb617224269cb35d783526b
   }
 
   game_play_move(g, coord_i, coord_j, S_BLANK);
@@ -338,7 +299,6 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint* nb_sol, game g)
 uint game_nb_solutions(cgame g)
 {
   assert(g);
-<<<<<<< HEAD
   game copy1 = game_copy(g);
   game copy2 = game_copy(g);
   uint nb_sol = 0;
@@ -357,12 +317,4 @@ uint game_nb_solutions(cgame g)
   }
 
   return nb_sol;
-=======
-  game copy = game_copy(g);
-  // game copy2 = game_copy(g);
-  uint nb_sol = 0;
-  // int* change = 0;
-
-  return game_nb_solutions_aux(0, 0, &nb_sol, copy);
->>>>>>> 89f2ac09235418604fb617224269cb35d783526b
 }

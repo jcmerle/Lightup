@@ -36,7 +36,8 @@ int test_new_ext(void)
   bool test3 = check_game_ext(g3, 3, 10, sol_3x10_squares, false);
   game_delete(g3);
 
-  if (test0 && test1 && test2 && test3) return EXIT_SUCCESS;
+  if (test0 && test1 && test2 && test3)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -48,7 +49,8 @@ int test_new_empty_ext(void)
   bool test0 = check_game_ext(g0, 4, 4, NULL, false);
   game_delete(g0);
 
-  if (test0) return EXIT_SUCCESS;
+  if (test0)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -74,7 +76,8 @@ int test_equal_ext(void)
   game_delete(g2);
   game_delete(g3);
 
-  if (test1 && test2 && test3) return EXIT_SUCCESS;
+  if (test1 && test2 && test3)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -96,7 +99,8 @@ int test_copy_ext(void)
   game_delete(g3);
   game_delete(g4);
 
-  if (test0 && test1) return EXIT_SUCCESS;
+  if (test0 && test1)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -113,7 +117,8 @@ int test_game_1d(void)
   bool test2 = game_is_over(g0);
   game_delete(g0);
 
-  if (test0 && test1 && test2) return EXIT_SUCCESS;
+  if (test0 && test1 && test2)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -131,7 +136,8 @@ int test_game_wrapping_5x3(void)
   bool test2 = game_is_over(g0);
   game_delete(g0);
 
-  if (test0 && test1 && test2) return EXIT_SUCCESS;
+  if (test0 && test1 && test2)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -157,7 +163,8 @@ int test_game_wrapping_3x3(void)
      ---
   */
 
-  if (test0 && test1 && test2) return EXIT_SUCCESS;
+  if (test0 && test1 && test2)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -182,7 +189,8 @@ int test_game_wrapping_2x2(void)
        --
   */
 
-  if (test0 && test1 && test2) return EXIT_SUCCESS;
+  if (test0 && test1 && test2)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -227,7 +235,8 @@ int test_game_wrapping_error(void)
      ---
   */
 
-  if (test3 && test4 && test6) return EXIT_SUCCESS;
+  if (test3 && test4 && test6)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -246,15 +255,16 @@ int test_undo_one(void)
   game_play_move(g0, 4, 4, S_LIGHTBULB);
   game_play_move(g0, 5, 0, S_LIGHTBULB);
   bool test0 = (game_get_square(g0, 6, 0) == F_LIGHTED);
-  game_play_move(g0, 6, 0, S_LIGHTBULB);  // bad move
+  game_play_move(g0, 6, 0, S_LIGHTBULB); // bad move
   bool test1 = (game_get_square(g0, 6, 0) == (S_LIGHTBULB | F_LIGHTED | F_ERROR));
-  game_undo(g0);  // undo it
+  game_undo(g0); // undo it
   bool test2 = (game_get_square(g0, 6, 0) == F_LIGHTED);
   game_play_move(g0, 6, 1, S_LIGHTBULB);
   game_play_move(g0, 5, 5, S_LIGHTBULB);
   bool test3 = check_game(g0, solution_squares);
   game_delete(g0);
-  if (test0 && test1 && test2 && test3) return EXIT_SUCCESS;
+  if (test0 && test1 && test2 && test3)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -272,16 +282,17 @@ int test_undo_redo_some(void)
   game_play_move(g0, 3, 6, S_LIGHTBULB);
   game_play_move(g0, 4, 4, S_LIGHTBULB);
   game_play_move(g0, 5, 5, S_LIGHTBULB);
-  game_play_move(g0, 5, 1, S_LIGHTBULB);  // this is a bad move!
-  game_undo(g0);                          // undo (5,1) => cancel bad move
-  game_undo(g0);                          // undo (5,5) => cancel good move
-  game_redo(g0);                          // redo (5,5) => redo good move
+  game_play_move(g0, 5, 1, S_LIGHTBULB); // this is a bad move!
+  game_undo(g0);                         // undo (5,1) => cancel bad move
+  game_undo(g0);                         // undo (5,5) => cancel good move
+  game_redo(g0);                         // redo (5,5) => redo good move
   game_play_move(g0, 5, 0, S_LIGHTBULB);
   game_play_move(g0, 6, 1, S_LIGHTBULB);
   bool test0 = check_game(g0, solution_squares);
   game_delete(g0);
 
-  if (test0) return EXIT_SUCCESS;
+  if (test0)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -303,13 +314,16 @@ int test_undo_redo_all(void)
   game_play_move(g1, 5, 5, S_LIGHTBULB);
   game_play_move(g1, 6, 1, S_LIGHTBULB);
   bool test2 = check_game(g1, solution_squares);
-  for (int k = 0; k < 10; k++) game_undo(g1);
+  for (int k = 0; k < 10; k++)
+    game_undo(g1);
   bool test3 = check_game(g1, default_squares);
-  for (int k = 0; k < 10; k++) game_redo(g1);
+  for (int k = 0; k < 10; k++)
+    game_redo(g1);
   bool test4 = check_game(g1, solution_squares);
   game_delete(g1);
 
-  if (test1 && test2 && test3 && test4) return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -323,10 +337,11 @@ int test_restart_undo(void)
   game_play_move(g0, 2, 2, S_LIGHTBULB);
   game_play_move(g0, 2, 2, S_BLANK);
   game_restart(g0);
-  game_undo(g0);  // it should do nothing
+  game_undo(g0); // it should do nothing
   bool test0 = check_game(g0, default_squares);
   game_delete(g0);
-  if (test0) return EXIT_SUCCESS;
+  if (test0)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -352,7 +367,8 @@ int test_game_save(void)
   bool test0 = game_equal(g0, g1);
   game_delete(g0);
   game_delete(g1);
-  if (test0) return EXIT_SUCCESS;
+  if (test0)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -374,7 +390,8 @@ int test_game_load(void)
   bool test0 = game_equal(g0, g1);
   game_delete(g0);
   game_delete(g1);
-  if (test0) return EXIT_SUCCESS;
+  if (test0)
+    return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -386,7 +403,8 @@ int test_game_solve(void)
   game g = game_load("../examples/game_3x10.txt");
   game_solve(g);
 
-  if (!game_is_over(g)) {
+  if (!game_is_over(g))
+  {
     return EXIT_FAILURE;
   }
 
@@ -395,15 +413,9 @@ int test_game_solve(void)
 
 int test_game_nb_solution(void)
 {
-<<<<<<< HEAD
-  //We load a 3x10 game which is huge 
-  //to really see the performance 
-  //of the game_nb_solution function
-=======
   // We load a 3x10 game which is huge
   // to really see the performance
-  // of the game_solve function
->>>>>>> 89f2ac09235418604fb617224269cb35d783526b
+  // of the game_nb_solution function
   game g = game_load("../examples/game_td11.txt");
   printf("> action: number of solutions\n");
   uint sol = game_nb_solutions(g);
