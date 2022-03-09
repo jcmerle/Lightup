@@ -90,12 +90,14 @@ static bool _check_blackwall_error(cgame g, uint i, uint j)
   if (s == S_BLACKU) return true; /* no constraint for unumbered wall */
   int expected = game_get_black_number(g, i, j);
   int nb_lightbulbs = _neigh_count(g, i, j, S_LIGHTBULB, S_MASK, false);
-  int nb_blanks = _neigh_count(g, i, j, S_BLANK, A_MASK, false);  // blank state, without lighted flag
+  int nb_blanks = _neigh_count(g, i, j, S_BLANK, A_MASK,
+                               false);  // blank state, without lighted flag
 
   // 1) too many lightbulbs
   if (nb_lightbulbs > expected) return false;
 
-  // 2) not enough blank squares (without lighted flag) to place the expected number of lightbulbs
+  // 2) not enough blank squares (without lighted flag) to place the expected
+  // number of lightbulbs
   if (nb_blanks < (expected - nb_lightbulbs)) return false;
 
   return true;

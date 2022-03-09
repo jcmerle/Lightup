@@ -72,6 +72,10 @@ static bool game_step(game g)
     char file[100] = "";
     scanf("%s", file);
     game_save(g, file);
+  } else if (c == 'c') {
+    printf("> action: number of solutions\n");
+    uint sol = game_nb_solutions(g);
+    printf("Number of solutions: %u\n", sol);
   } else if (c == 'q') {  // quit
     printf("> action: quit\n");
     return false;                                 // exit

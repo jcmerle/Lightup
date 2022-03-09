@@ -380,14 +380,13 @@ int test_game_load(void)
 
 int test_game_solve(void)
 {
-  //We load a 3x10 game which is huge 
-  //to really see the performance 
-  //of the game_solve function
+  // We load a 3x10 game which is huge
+  // to really see the performance
+  // of the game_solve function
   game g = game_load("../examples/game_3x10.txt");
   game_solve(g);
 
-  if(!game_is_over(g))
-  {
+  if (!game_is_over(g)) {
     return EXIT_FAILURE;
   }
 
@@ -396,12 +395,18 @@ int test_game_solve(void)
 
 int test_game_nb_solution(void)
 {
+<<<<<<< HEAD
   //We load a 3x10 game which is huge 
   //to really see the performance 
   //of the game_nb_solution function
+=======
+  // We load a 3x10 game which is huge
+  // to really see the performance
+  // of the game_solve function
+>>>>>>> 89f2ac09235418604fb617224269cb35d783526b
   game g = game_load("../examples/game_td11.txt");
   printf("> action: number of solutions\n");
-  uint sol =game_nb_solutions(g);
+  uint sol = game_nb_solutions(g);
   printf("Number of solutions: %u\n", sol);
 
   return EXIT_SUCCESS;
