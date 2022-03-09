@@ -231,13 +231,15 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     if (game_is_over(g))
     {
       *is_solution = true;
-      char string[10];
-      char filename[10] = "sol_";
+      
+      
 
       if (*nb_sol > 0)
       {
         for (uint k = 1; k <= *nb_sol; k++)
         {
+          char string[10];
+          char filename[10] = "sol_";
           sprintf(string, "%u", k);
           strcat(filename, strcat(string, ".txt"));
           copy = game_load(filename);
@@ -251,9 +253,11 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
       if (*is_solution)
       {
         (*nb_sol)++;
-        sprintf(string, "%u", *nb_sol);
-        strcat(filename, strcat(string, ".txt"));
-        game_save(g, filename);
+        char save_string[10];
+        char save_filename[10] = "sol_";
+        sprintf(save_string, "%u", *nb_sol);
+        strcat(save_filename, strcat(save_string, ".txt"));
+        game_save(g, save_filename);
       }
     }
     return (*nb_sol);

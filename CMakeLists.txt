@@ -23,7 +23,7 @@ add_executable(game_text game_text.c)
 target_link_libraries(game_text game)
 
 # game tests
-add_executable(game_test game_test.c game_test_aux.c game_test_v1.c game_test_v2.c game_examples.c)
+add_executable(game_test game_test.c game_test_aux.c game_test_v1.c game_test_v2.c game_test_tools.c game_examples.c)
 target_link_libraries(game_test game)
 
 # game solve

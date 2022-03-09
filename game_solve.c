@@ -5,6 +5,7 @@
 
 #include "game_aux.h"
 #include "game_tools.h"
+#include "game_test.h"
 
 void usage(char *string)
 {
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
     else
     {
       FILE* file = fopen(argv[3], "w");
-      fprintf(file, "Number of solutions: %u\n", game_nb_solutions(g));
+      fprintf(file, "%u", game_nb_solutions(g));
     }
   }
 
