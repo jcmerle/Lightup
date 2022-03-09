@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-      FILE *file = fopen(argv[3], "w");
+      FILE* file = fopen(argv[3], "w");
       fprintf(file, "Number of solutions: %u\n", game_nb_solutions(g));
     }
   }

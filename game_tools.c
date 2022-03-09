@@ -259,6 +259,7 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     return (*nb_sol);
   }
 
+//We put lightbulb
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
@@ -273,12 +274,10 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
   }
 
-  if (game_check_move(g, coord_i, coord_j, S_BLANK))
+//We put blank
+  if (game_check_move(g, coord_i, coord_j, S_BLANK) && !game_is_blank(g, coord_i, coord_j))
   {
-    if (!game_is_blank(g, coord_i, coord_j))
-    {
-      game_play_move(g, coord_i, coord_j, S_BLANK);
-    }
+    game_play_move(g, coord_i, coord_j, S_BLANK);
   }
 
   if (coord_j == game_nb_cols(g) - 1)
@@ -290,10 +289,8 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
   }
 
-  game_play_move(g, coord_i, coord_j, S_BLANK);
-  game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
-  game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
-  return game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g);
+  
+  return *nb_sol;
 }
 
 uint game_nb_solutions(cgame g)
