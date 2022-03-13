@@ -201,7 +201,7 @@ bool game_solve(game g)
 
 /*----------------Game_nb_solution-----------------*/
 
-uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename)
+uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename)
 {
   // Recurrence stop condition
   if (coord_i == game_nb_rows(g) && coord_j == 0)
@@ -249,11 +249,11 @@ uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game
 
   if (coord_j == game_nb_cols(g) - 1)
   {
-    game_nb_solution_aux(coord_i + 1, 0, nb_sol, g, copy, filename);
+    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, copy, filename);
   }
   else
   {
-    game_nb_solution_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
+    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
   }
 
   // We put blank and we continue with the next square
@@ -266,18 +266,18 @@ uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game
 
     if (coord_j == game_nb_cols(g) - 1)
     {
-      game_nb_solution_aux(coord_i + 1, 0, nb_sol, g, copy, filename);
+      game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, copy, filename);
     }
     else
     {
-      game_nb_solution_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
+      game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
     }
   }
 
   return *nb_sol;
 }
 
-uint game_nb_solution(cgame g)
+uint game_nb_solutions(cgame g)
 {
   assert(g);
   game copy1 = game_copy(g);
@@ -285,7 +285,7 @@ uint game_nb_solution(cgame g)
   uint nb_sol = 0;
   char filename[20] = "sol_game.txt";
 
-  game_nb_solution_aux(0, 0, &nb_sol, copy1, copy2, filename);
+  game_nb_solutions_aux(0, 0, &nb_sol, copy1, copy2, filename);
 
   remove(filename);
 

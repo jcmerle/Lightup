@@ -51,7 +51,7 @@ bool game_solve_aux(uint nb_rows, uint nb_cols, uint coord_i, uint coord_j, game
  * @details The game @p g must be unchanged.
  * @return the number of solutions
  */
-uint game_nb_solution(cgame g);
+uint game_nb_solutions(cgame g);
 
 /**
  * @}

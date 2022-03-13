@@ -76,13 +76,13 @@ int test_game_solve(void)
   return EXIT_SUCCESS;
 }
 
-int test_game_nb_solution(void)
+int test_game_nb_solutions(void)
 {
   // We load a 3x10 game which is huge
   // to really see the performance
-  // of the game_nb_solution function
+  // of the game_nb_solutions function
   game g = game_load("../examples/blank_4x4.txt");
-  uint sol = game_nb_solution(g);
+  uint sol = game_nb_solutions(g);
   printf("Number of solutions: %u\n", sol);
 
   return EXIT_SUCCESS;

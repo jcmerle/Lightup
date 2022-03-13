@@ -92,7 +92,7 @@ static bool game_step(game g)
   else if (c == 'c')
   {
     printf("> action: number of solutions\n");
-    uint sol = game_nb_solution(g);
+    uint sol = game_nb_solutions(g);
     printf("Number of solutions: %u\n", sol);
   }
   else if (c == 'q')

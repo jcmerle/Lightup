@@ -77,7 +77,7 @@ add_test(testv2_restart_undo ./game_test "restart_undo")
 add_test(test_game_save  ./game_test "game_save")
 add_test(test_game_load  ./game_test "game_load")
 add_test(test_game_solve ./game_test "game_solve")
-add_test(test_game_nb_solution ./game_test "game_nb_solution")
+add_test(test_game_nb_solutions ./game_test "game_nb_solutions")
 
 #############################  #############################
 

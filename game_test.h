@@ -67,6 +67,6 @@ int test_restart_undo(void);
 int test_game_save(void);
 int test_game_load(void);
 int test_game_solve(void);
-int test_game_nb_solution(void);
+int test_game_nb_solutions(void);
 
 #endif // __GAME_TEST_H__
