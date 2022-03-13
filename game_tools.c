@@ -231,38 +231,25 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     if (game_is_over(g))
     {
       *is_solution = true;
+      char filename[20] = "sol_game.txt";
       
-      
-
       if (*nb_sol > 0)
       {
-        for (uint k = 1; k <= *nb_sol; k++)
+        copy = game_load(filename);
+        if (game_equal(g, copy))
         {
-          char string[10];
-          char filename[10] = "sol_";
-          sprintf(string, "%u", k);
-          strcat(filename, strcat(string, ".txt"));
-          copy = game_load(filename);
-
-          if (game_equal(g, copy))
-          {
-            *is_solution = false;
-          }
+          *is_solution = false;
         }
       }
       if (*is_solution)
       {
         (*nb_sol)++;
-        char save_string[10];
-        char save_filename[10] = "sol_";
-        sprintf(save_string, "%u", *nb_sol);
-        strcat(save_filename, strcat(save_string, ".txt"));
-        game_save(g, save_filename);
+        game_save(g, filename);
       }
     }
     return (*nb_sol);
   }
-
+/*
   for (int y = 0; y < game_nb_rows(g); y++)
   {
     for (int x = 0; x < game_nb_cols(g); x++)
@@ -273,7 +260,7 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
       }
     }
   }
-
+*/
 //We put lightbulb
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
@@ -293,18 +280,17 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
   if (game_check_move(g, coord_i, coord_j, S_BLANK) && !game_is_blank(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_BLANK);
-  }
-
-  if (coord_j == game_nb_cols(g) - 1)
-  {
-    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, copy, is_solution);
-  }
-  else
-  {
-    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
-  }
-
   
+    if (coord_j == game_nb_cols(g) - 1)
+    {
+      game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, copy, is_solution);
+    }
+    else
+    {
+      game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
+    }
+  }
+
   return *nb_sol;
 }
 
@@ -319,14 +305,7 @@ uint game_nb_solutions(cgame g)
 
   game_nb_solutions_aux(0, 0, &nb_sol, copy1, copy2, is_solution);
 
-  for (uint k = 1; k <= nb_sol; k++)
-  {
-    char string[10];
-    char filename[10] = "sol_";
-    sprintf(string, "%u", k);
-    strcat(filename, strcat(string, ".txt"));
-    remove(filename);
-  }
+  remove("sol_game.txt");
 
   return nb_sol;
 }
