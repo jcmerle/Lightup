@@ -51,12 +51,12 @@ int main(int argc, char *argv[])
   {
     if (argc == 3)
     {
-      printf("Number of solutions: %u\n", game_nb_solutions(g)); // We print the game solution in the standard output
+      printf("Number of solutions: %u\n", game_nb_solution(g)); // We print the game solution in the standard output
     }
     else
     {
-      FILE* file = fopen(argv[3], "w");
-      fprintf(file, "%u", game_nb_solutions(g));
+      FILE *file = fopen(argv[3], "w");
+      fprintf(file, "%u", game_nb_solution(g));
     }
   }
 

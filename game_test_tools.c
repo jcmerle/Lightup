@@ -10,7 +10,6 @@
 #include "game_test.h"
 #include "game_tools.h"
 
-
 /* ************************************************************************** */
 /*                           GAME_TOOLS TESTS                         */
 /* ************************************************************************** */
@@ -83,7 +82,7 @@ int test_game_nb_solution(void)
   // to really see the performance
   // of the game_nb_solution function
   game g = game_load("../examples/blank_4x4.txt");
-  uint sol = game_nb_solutions(g);
+  uint sol = game_nb_solution(g);
   printf("Number of solutions: %u\n", sol);
 
   return EXIT_SUCCESS;
