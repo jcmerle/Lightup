@@ -263,6 +263,17 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     return (*nb_sol);
   }
 
+  for (int y = 0; y < game_nb_rows(g); y++)
+  {
+    for (int x = 0; x < game_nb_cols(g); x++)
+    {
+      if (game_has_error(g, y, x))
+      {
+        return false;
+      }
+    }
+  }
+
 //We put lightbulb
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
