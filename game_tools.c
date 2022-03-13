@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
-#include "assert.h"
+#include "game_tools.h"
 #include "game.h"
 #include "game_aux.h"
 #include "game_ext.h"
@@ -105,7 +106,9 @@ void game_save(cgame g, char *filename)
   fclose(file);
 }
 
-bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
+/*----------------Game_solve-----------------*/
+
+bool game_solve_aux(uint nb_rows, uint nb_cols, uint coord_i, uint coord_j, game g)
 {
   // Recurrence stop condition
   if (coord_i == nb_rows && coord_j == 0)
@@ -116,9 +119,9 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
   // Double loop to see if the game has an error and so if it is necessary to continue
   // if the game has an error we stop and return false.
   // It is a really effective optimisation
-  for (int y = 0; y < nb_rows; y++)
+  for (uint y = 0; y < nb_rows; y++)
   {
-    for (int x = 0; x < nb_cols; x++)
+    for (uint x = 0; x < nb_cols; x++)
     {
       if (game_has_error(g, y, x))
       {
@@ -196,8 +199,11 @@ bool game_solve(game g)
   }
 }
 
+/*----------------Game_nb_solution-----------------*/
+
 uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename)
 {
+  // Recurrence stop condition
   if (coord_i == game_nb_rows(g) && coord_j == 0)
   {
     if (game_is_over(g))
@@ -206,21 +212,24 @@ uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game
 
       if (*nb_sol > 0)
       {
-        copy = game_load(filename);
-        if (game_equal(g, copy))
+        copy = game_load(filename); // We compare the last solution
+        if (game_equal(g, copy))    // With the current solution
         {
           is_solution = false;
         }
       }
       if (is_solution)
       {
-        (*nb_sol)++;
-        game_save(g, filename);
+        (*nb_sol)++;            // We increment nb_sol
+        game_save(g, filename); // And we save the last solution
       }
     }
     return (*nb_sol);
   }
 
+  // Double loop to see if the game has an error and so if it is necessary to continue
+  // if the game has an error we stop and return false.
+  // It is a really effective optimisation
   for (uint y = 0; y < game_nb_rows(g); y++)
   {
     for (uint x = 0; x < game_nb_cols(g); x++)
@@ -247,7 +256,10 @@ uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game
     game_nb_solution_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
   }
 
-  // We put blank
+  // We put blank and we continue with the next square
+  // Only if the square is not already blank
+  // else we return directly nb_sol
+  // Efficient optimisation
   if (game_check_move(g, coord_i, coord_j, S_BLANK) && !game_is_blank(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_BLANK);

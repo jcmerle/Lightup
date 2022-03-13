@@ -20,23 +20,29 @@
 /* ************************************************************************** */
 
 /* if squares == NULL, test if game is empty */
-bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square* squares, bool wrapping)
+bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square *squares, bool wrapping)
 {
-  if (!g) return false;
+  if (!g)
+    return false;
 
   // nb rows & cols
-  if (game_nb_rows(g) != nb_rows) return false;
-  if (game_nb_cols(g) != nb_cols) return false;
+  if (game_nb_rows(g) != nb_rows)
+    return false;
+  if (game_nb_cols(g) != nb_cols)
+    return false;
 
   // options
-  if (game_is_wrapping(g) != wrapping) return false;
+  if (game_is_wrapping(g) != wrapping)
+    return false;
 
   // check squares
   for (uint i = 0; i < nb_rows; i++)
-    for (uint j = 0; j < nb_cols; j++) {
+    for (uint j = 0; j < nb_cols; j++)
+    {
       square s = game_get_square(g, i, j);
       square ss = squares ? squares[i * nb_cols + j] : S_BLANK;
-      if (s != ss) return false;
+      if (s != ss)
+        return false;
     }
 
   return true;
@@ -44,13 +50,13 @@ bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square* squares, bool w
 
 /* ************************************************************************** */
 
-bool check_game(game g, square* squares) { return check_game_ext(g, DEFAULT_SIZE, DEFAULT_SIZE, squares, false); }
+bool check_game(game g, square *squares) { return check_game_ext(g, DEFAULT_SIZE, DEFAULT_SIZE, squares, false); }
 
 /* ************************************************************************** */
 /*                                MAIN ROUTINE                                */
 /* ************************************************************************** */
 
-static void usage(int argc, char* argv[])
+static void usage(int argc, char *argv[])
 {
   assert(argc > 0);
   fprintf(stderr, "Usage: %s <testname>\n", argv[0]);
@@ -59,13 +65,14 @@ static void usage(int argc, char* argv[])
 
 /* ************************************************************************** */
 
-struct test {
-  char* name;
+struct test
+{
+  char *name;
   int (*func)(void);
 };
 
 /* ************************************************************************** */
-struct test tests[] = {  // dummy test
+struct test tests[] = { // dummy test
 
     // basic tests (game v1)
     {"new", test_new},
@@ -121,26 +128,34 @@ struct test tests[] = {  // dummy test
 
 /* ************************************************************************** */
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   // run test
-  if (argc == 1) usage(argc, argv);
+  if (argc == 1)
+    usage(argc, argv);
   int ret = -1;
-  for (struct test* t = tests; t->name && t->func; t++) {
-    if (strcmp(argv[1], t->name) == 0) {
+  for (struct test *t = tests; t->name && t->func; t++)
+  {
+    if (strcmp(argv[1], t->name) == 0)
+    {
       ret = t->func();
       break;
     }
   }
 
   // print test result
-  if (ret == -1) {
+  if (ret == -1)
+  {
     fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
     return EXIT_FAILURE;
-  } else if (ret == 0) {
+  }
+  else if (ret == 0)
+  {
     fprintf(stderr, "Test \"%s\" finished: SUCCESS\n", argv[1]);
     return EXIT_SUCCESS;
-  } else {
+  }
+  else
+  {
     fprintf(stderr, "Test \"%s\" finished: FAILURE\n", argv[1]);
     return EXIT_FAILURE;
   }

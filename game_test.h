@@ -14,8 +14,8 @@
 /*                               CHECK ROUTINES                               */
 /* ************************************************************************** */
 
-bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square* squares, bool wrapping);
-bool check_game(game g, square* squares);
+bool check_game_ext(cgame g, uint nb_rows, uint nb_cols, square *squares, bool wrapping);
+bool check_game(game g, square *squares);
 
 /* ************************************************************************** */
 /*                                AUX TESTS                                   */
@@ -69,4 +69,4 @@ int test_game_load(void);
 int test_game_solve(void);
 int test_game_nb_solution(void);
 
-#endif  // __GAME_TEST_H__
+#endif // __GAME_TEST_H__

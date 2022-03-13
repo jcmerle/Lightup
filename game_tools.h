@@ -43,6 +43,8 @@ void game_save(cgame g, char *filename);
  */
 bool game_solve(game g);
 
+bool game_solve_aux(uint nb_rows, uint nb_cols, uint coord_i, uint coord_j, game g);
+
 /**
  * @brief Computes the total number of solutions of a given game.
  * @param g the game
