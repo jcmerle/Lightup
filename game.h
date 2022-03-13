@@ -32,7 +32,8 @@ typedef unsigned int uint;
  * bitwise OR operator (|). For more details on bitwise operations, see
  * https://en.wikipedia.org/wiki/Bitwise_operations_in_C.
  **/
-typedef enum {
+typedef enum
+{
   /* states */
   S_BLANK = 0,        /**< a blank square */
   S_LIGHTBULB = 1,    /**< a light bulb */
@@ -61,14 +62,14 @@ typedef enum {
 /**
  * @brief The structure pointer that stores the game state.
  **/
-typedef struct game_s* game;
+typedef struct game_s *game;
 
 /**
  * @brief The structure constant pointer that stores the game state.
  * @details That means that it is not possible to modify the game using this
  * pointer.
  **/
-typedef const struct game_s* cgame;
+typedef const struct game_s *cgame;
 
 /**
  * @brief Creates a new game with default size and initializes it.
@@ -78,7 +79,7 @@ typedef const struct game_s* cgame;
  * @pre @p squares must be an initialized array of default size squared.
  * @return the created game
  **/
-game game_new(square* squares);
+game game_new(square *squares);
 
 /**
  * @brief Creates a new empty game with defaut size.
@@ -313,4 +314,4 @@ bool game_is_over(cgame g);
  **/
 void game_restart(game g);
 
-#endif  // __GAME_H__
+#endif // __GAME_H__

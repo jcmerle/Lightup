@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
-#include "assert.h"
+#include "game_tools.h"
 #include "game.h"
 #include "game_aux.h"
 #include "game_ext.h"
@@ -105,7 +106,26 @@ void game_save(cgame g, char *filename)
   fclose(file);
 }
 
-bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
+/*----------------Game_solve-----------------*/
+bool game_solve(game g)
+{
+  assert(g);
+  game copy = game_copy(g);
+
+  if (game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g))
+  {
+    return true;
+  }
+
+  // On renvoie g à l'état initial si on a pas trouvé
+  else
+  {
+    g = game_copy(copy);
+    return false;
+  }
+}
+
+bool game_solve_aux(uint nb_rows, uint nb_cols, uint coord_i, uint coord_j, game g)
 {
   // Recurrence stop condition
   if (coord_i == nb_rows && coord_j == 0)
@@ -116,9 +136,9 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
   // Double loop to see if the game has an error and so if it is necessary to continue
   // if the game has an error we stop and return false.
   // It is a really effective optimisation
-  for (int y = 0; y < nb_rows; y++)
+  for (uint y = 0; y < nb_rows; y++)
   {
-    for (int x = 0; x < nb_cols; x++)
+    for (uint x = 0; x < nb_cols; x++)
     {
       if (game_has_error(g, y, x))
       {
@@ -178,81 +198,54 @@ bool game_solve_aux(int nb_rows, int nb_cols, int coord_i, int coord_j, game g)
   return false;
 }
 
-bool game_solve(game g)
+/*----------------Game_nb_solution-----------------*/
+uint game_nb_solution(cgame g)
 {
   assert(g);
-  game copy = game_copy(g);
+  game copy1 = game_copy(g);
+  game copy2 = game_copy(g);
+  uint nb_sol = 0;
+  char filename[20] = "sol_game.txt"; // Name of the file which has the last solution
 
-  if (game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g))
-  {
-    return true;
-  }
+  game_nb_solution_aux(0, 0, &nb_sol, copy1, copy2, filename);
 
-  // On renvoie g à l'état initial si on a pas trouvé
-  else
-  {
-    g = game_copy(copy);
-    return false;
-  }
+  remove(filename);
+
+  return nb_sol;
 }
 
-game exact_copy_of(game g)
+uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename)
 {
-  game copy = game_new_empty_ext(g->nb_rows, g->nb_cols, g->wrapping);
-
-  for (uint i = 0; i < g->nb_rows; i++)
-  {
-    for (uint j = 0; j < g->nb_cols; j++)
-    {
-      if (game_is_blank(g, i, j))
-      {
-        game_play_move(copy, i, j, S_BLANK);
-      }
-      else if (game_is_lightbulb(g, i, j))
-      {
-        game_play_move(copy, i, j, S_LIGHTBULB);
-      }
-      else if (game_is_black(g, i, j))
-      {
-        game_set_square(copy, i, j, game_get_square(g, i, j));
-      }
-    }
-  }
-
-  game_update_flags(copy);
-
-  return copy;
-}
-
-uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, bool *is_solution)
-{
+  // Recurrence stop condition
   if (coord_i == game_nb_rows(g) && coord_j == 0)
   {
     if (game_is_over(g))
     {
-      *is_solution = true;
-      char filename[20] = "sol_game.txt";
-      
+      bool is_solution = true;
+
       if (*nb_sol > 0)
       {
-        copy = game_load(filename);
-        if (game_equal(g, copy))
+        copy = game_load(filename); // We compare the last solution
+        if (game_equal(g, copy))    // With the current solution
         {
-          *is_solution = false;
+          is_solution = false;
         }
       }
-      if (*is_solution)
+      if (is_solution)
       {
-        (*nb_sol)++;
-        game_save(g, filename);
+        (*nb_sol)++;            // We increment nb_sol
+        game_save(g, filename); // And we save the last solution
       }
     }
     return (*nb_sol);
   }
 
-  for (int y = 0; y < game_nb_rows(g); y++)
+  // Double loop to see if the game has an error and so if it is necessary to continue
+  // if the game has an error we stop and return false.
+  // It is a really effective optimisation
+  for (uint y = 0; y < game_nb_rows(g); y++)
   {
-    for (int x = 0; x < game_nb_cols(g); x++)
+    for (uint x = 0; x < game_nb_cols(g); x++)
     {
       if (game_has_error(g, y, x))
       {
@@ -261,7 +254,7 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
     }
   }
 
-//We put lightbulb
+  // We put lightbulb
   if (game_check_move(g, coord_i, coord_j, S_LIGHTBULB) && !game_is_lighted(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_LIGHTBULB);
@@ -269,43 +262,30 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
 
   if (coord_j == game_nb_cols(g) - 1)
   {
-    game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, copy, is_solution);
+    game_nb_solution_aux(coord_i + 1, 0, nb_sol, g, copy, filename);
   }
   else
   {
-    game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
+    game_nb_solution_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
   }
 
-//We put blank
+  // We put blank and we continue with the next square
+  // Only if the square is not already blank
+  // else we return directly nb_sol
+  // Efficient optimisation
   if (game_check_move(g, coord_i, coord_j, S_BLANK) && !game_is_blank(g, coord_i, coord_j))
   {
     game_play_move(g, coord_i, coord_j, S_BLANK);
-  
+
     if (coord_j == game_nb_cols(g) - 1)
     {
-      game_nb_solutions_aux(coord_i + 1, 0, nb_sol, g, copy, is_solution);
+      game_nb_solution_aux(coord_i + 1, 0, nb_sol, g, copy, filename);
     }
     else
     {
-      game_nb_solutions_aux(coord_i, coord_j + 1, nb_sol, g, copy, is_solution);
+      game_nb_solution_aux(coord_i, coord_j + 1, nb_sol, g, copy, filename);
     }
   }
 
   return *nb_sol;
-}
-
-uint game_nb_solutions(cgame g)
-{
-  assert(g);
-  game copy1 = game_copy(g);
-  game copy2 = game_copy(g);
-  uint nb_sol = 0;
-  bool boolean = false;
-  bool *is_solution = &boolean;
-
-  game_nb_solutions_aux(0, 0, &nb_sol, copy1, copy2, is_solution);
-
-  remove("sol_game.txt");
-
-  return nb_sol;
 }

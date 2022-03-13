@@ -24,7 +24,7 @@
  * @param filename input file
  * @return the loaded game
  **/
-game game_load(char* filename);
+game game_load(char *filename);
 
 /**
  * @brief Saves a game in a text file.
@@ -32,7 +32,7 @@ game game_load(char* filename);
  * @param g game to save
  * @param filename output file
  **/
-void game_save(cgame g, char* filename);
+void game_save(cgame g, char *filename);
 
 /**
  * @brief Computes the solution of a given game
@@ -43,16 +43,20 @@ void game_save(cgame g, char* filename);
  */
 bool game_solve(game g);
 
+bool game_solve_aux(uint nb_rows, uint nb_cols, uint coord_i, uint coord_j, game g);
+
 /**
  * @brief Computes the total number of solutions of a given game.
  * @param g the game
  * @details The game @p g must be unchanged.
  * @return the number of solutions
  */
-uint game_nb_solutions(cgame g);
+uint game_nb_solution(cgame g);
+
+uint game_nb_solution_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename);
 
 /**
  * @}
  */
 
-#endif  // __GAME_TOOLS_H__
+#endif // __GAME_TOOLS_H__
