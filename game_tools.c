@@ -158,20 +158,20 @@ bool game_solve_aux(uint nb_rows, uint nb_cols, uint coord_i, uint coord_j, game
   if (game_check_move(g, coord_i, coord_j, S_BLANK))
   {
     game_play_move(g, coord_i, coord_j, S_BLANK);
-  }
 
-  if (coord_j == nb_cols - 1)
-  {
-    if (game_solve_aux(nb_rows, nb_cols, coord_i + 1, 0, g))
+    if (coord_j == nb_cols - 1)
     {
-      return true;
+      if (game_solve_aux(nb_rows, nb_cols, coord_i + 1, 0, g))
+      {
+        return true;
+      }
     }
-  }
-  else
-  {
-    if (game_solve_aux(nb_rows, nb_cols, coord_i, coord_j + 1, g))
+    else
     {
-      return true;
+      if (game_solve_aux(nb_rows, nb_cols, coord_i, coord_j + 1, g))
+      {
+        return true;
+      }
     }
   }
 
