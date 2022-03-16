@@ -208,21 +208,7 @@ uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, gam
   {
     if (game_is_over(g))
     {
-      bool is_solution = true;
-
-      if (*nb_sol > 0)
-      {
-        copy = game_load(filename); // We compare the last solution
-        if (game_equal(g, copy))    // With the current solution
-        {
-          is_solution = false;
-        }
-      }
-      if (is_solution)
-      {
-        (*nb_sol)++;            // We increment nb_sol
-        game_save(g, filename); // And we save the last solution
-      }
+      (*nb_sol)++;
     }
     return (*nb_sol);
   }
