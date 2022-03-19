@@ -4,21 +4,20 @@
 #include <string.h>
 
 #include "game_aux.h"
-#include "game_tools.h"
 #include "game_test.h"
+#include "game_tools.h"
 
-void usage(char *string)
+void usage(char* string)
 {
   fprintf(stderr, "./%s <option> <input> [<output>], the last parameter is optional\n", string);
   fprintf(stderr, "<option> can be -s or -c\n");
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   game g = NULL;
   // the executable must have 3 or 4 parameters
-  if (argc <= 2 || argc > 4)
-  {
+  if (argc <= 2 || argc > 4) {
     usage(argv[0]);
     return EXIT_FAILURE;
   }
@@ -27,40 +26,29 @@ int main(int argc, char *argv[])
   assert(g);
 
   // the -s option means to give the first solution of a game
-  if (strcmp("-s", argv[1]) == 0)
-  {
-    if (game_solve(g))
-    {
-      if (argc == 3)
-      {
-        game_print(g); // We print the game solution in the standard output
+  if (strcmp("-s", argv[1]) == 0) {
+    if (game_solve(g)) {
+      if (argc == 3) {
+        game_print(g);  // We print the game solution in the standard output
+      } else {
+        game_save(g, argv[3]);  // Or in a file
       }
-      else
-      {
-        game_save(g, argv[3]); // Or in a file
-      }
-    }
-    else
-    {
-      return EXIT_FAILURE; // There is no solution for the game
+    } else {
+      return EXIT_FAILURE;  // There is no solution for the game
     }
   }
 
   // the -c option means to give the number of solution for a game
-  else if (strcmp("-c", argv[1]) == 0)
-  {
-    if (argc == 3)
-    {
-      printf("Number of solutions: %u\n", game_nb_solutions(g)); // We print the game solution in the standard output
-    }
-    else
-    {
-      FILE *file = fopen(argv[3], "w");
+  else if (strcmp("-c", argv[1]) == 0) {
+    if (argc == 3) {
+      printf("Number of solutions: %u\n", game_nb_solutions(g));  // We print the game solution in the standard output
+    } else {
+      FILE* file = fopen(argv[3], "w");
       fprintf(file, "%u", game_nb_solutions(g));
     }
   }
 
-  else // Not a correct option
+  else  // Not a correct option
   {
     usage(argv[0]);
     return EXIT_FAILURE;
