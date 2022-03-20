@@ -15,12 +15,26 @@ set(CMAKE_C_FLAGS_RELEASE "-O3 ")   # use CMake option: -DCMAKE_BUILD_TYPE=RELEA
 
 ############################# SRC #############################
 
+## use a CMake3 package to solve SDL2 dependencies
+find_package(SDL2 REQUIRED)
+set(SDL2_ALL_INC ${SDL2_INCLUDE_DIRS})
+set(SDL2_ALL_LIBS ${SDL2_LIBRARIES} -lSDL2_ttf -lSDL2_image) # add extra SDL2 libraries
+
+## print this 
+message(STATUS "SDL2 include dir: ${SDL2_ALL_INC}")
+message(STATUS "SDL2 all libraries: ${SDL2_ALL_LIBS}")
+
+include_directories(${SDL2_ALL_INC})
 # game library
 add_library(game game.c game_ext.c game_aux.c game_private.c queue.c game_tools.c)
 
 # game text
 add_executable(game_text game_text.c)
 target_link_libraries(game_text game)
+
+# game sdl
+add_executable(game_sdl game_sdl.c model.c)
+target_link_libraries(game_sdl game ${SDL2_ALL_LIBS})
 
 # game tests
 add_executable(game_test game_test.c game_test_aux.c game_test_v1.c game_test_v2.c game_test_tools.c game_examples.c)
@@ -79,6 +93,10 @@ add_test(test_game_load  ./game_test "game_load")
 add_test(test_game_solve ./game_test "game_solve")
 add_test(test_game_nb_solutions ./game_test "game_nb_solutions")
 
+## copy useful data files in build dir
+foreach(file "ressources/fire.png" "ressources/digit0.png" "ressources/digit1.png" "ressources/digit2.png" "ressources/digit3.png" "ressources/digit4.png" "ressources/colon.png")
+  file(COPY ${file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+endforeach(data_file)
 #############################  #############################
 
 # EOF
