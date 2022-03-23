@@ -37,6 +37,9 @@ int main(int argc, char *argv[])
   /* initialize your environment */
   Env *env = init(win, ren, argc, argv);
 
+  /* if game en option je load le game sinon game_default
+  /* appele game_load
+
   /* main render loop */
   SDL_Event e;
   bool quit = false;

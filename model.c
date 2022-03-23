@@ -116,7 +116,6 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e)
     env->fire_x = mouse.x;
     env->fire_y = mouse.y;
   }
-
   return false;
 }
 
