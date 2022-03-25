@@ -7,7 +7,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "game_sdl.h"
+#include "sdl.h"
+#include "game.h"
+#include "game_aux.h"
 
 /* **************************************************************** */
 
@@ -37,8 +39,10 @@ int main(int argc, char *argv[])
   /* initialize your environment */
   Env *env = init(win, ren, argc, argv);
 
-  /* if game en option je load le game sinon game_default
-  /* appele game_load
+  /* if game en option je load le game sinon game_default*/
+
+  game g = game_default();
+  /* appele game_load*/
 
   /* main render loop */
   SDL_Event e;
@@ -55,11 +59,11 @@ int main(int argc, char *argv[])
     }
 
     /* background in gray */
-    SDL_SetRenderDrawColor(ren, 0xA0, 0xA0, 0xA0, 0xFF);
+    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
     SDL_RenderClear(ren);
 
     /* render all what you want */
-    render(win, ren, env);
+    render(win, ren, env, g);
     SDL_RenderPresent(ren);
     SDL_Delay(DELAY);
   }

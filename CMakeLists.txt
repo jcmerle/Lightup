@@ -33,7 +33,7 @@ add_executable(game_text game_text.c)
 target_link_libraries(game_text game)
 
 # game sdl
-add_executable(game_sdl game_sdl.c model.c)
+add_executable(game_sdl game_sdl.c sdl.c)
 target_link_libraries(game_sdl game ${SDL2_ALL_LIBS})
 
 # game tests
