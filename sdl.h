@@ -48,7 +48,8 @@ typedef struct Env_t Env;
 
 /* **************************************************************** */
 
-#define FIRE "fire.png"
+#define PACMAN "pacman.png"
+#define DOT "dot.png"
 #define BACK_ARROW "back_arrow.bmp"
 #define FORWARD_ARROW "forward_arrow.bmp"
 #define REPEAT_ARROW "repeat_arrow.bmp"
@@ -57,7 +58,7 @@ typedef struct Env_t Env;
 #define NUMBER2 "number2.png"
 #define NUMBER3 "number3.png"
 #define NUMBER4 "number4.png"
-#define FONT "Minecraft.ttf"
+#define FONT "pacman.ttf"
 
 /* **************************************************************** */
 

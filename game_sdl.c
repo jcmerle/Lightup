@@ -63,8 +63,8 @@ int main(int argc, char *argv[])
     }
 
     
-    /* background in gray */
-    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
+    /* background in black */
+    SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
 
     /* render all what you want */
