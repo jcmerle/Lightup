@@ -14,12 +14,14 @@
 /* **************************************************************** */
 
 #define FIRE "fire.png"
+#define BACK_ARROW "back_arrow.bmp"
 
 /* **************************************************************** */
 
 struct Env_t
 {
   SDL_Texture *fire;
+  SDL_Texture *back_arrow;
   int fire_x, fire_y;
 };
 
@@ -33,14 +35,15 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   int w, h;
   SDL_GetWindowSize(win, &w, &h);
 
-  /* init positions */
-  env->fire_x = w / 2;
-  env->fire_y = h / 4;
-
   /* init fire texture from PNG image */
   env->fire = IMG_LoadTexture(ren, FIRE);
   if (!env->fire)
     ERROR("IMG_LoadTexture: %s\n", FIRE);
+
+  /* init fire texture from PNG image */
+  env->back_arrow = IMG_LoadTexture(ren, BACK_ARROW);
+  if (!env->back_arrow)
+    ERROR("IMG_LoadTexture: %s\n", BACK_ARROW);
 
   return env;
 }
@@ -52,6 +55,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
+  SDL_Rect arrow_rect;
 
   /* set some colors */
   SDL_Color blue_color = {25, 75, 240, SDL_ALPHA_OPAQUE};
@@ -61,6 +65,18 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   int w, h;
   SDL_GetWindowSize(win, &w, &h);
 
+  /* get padding and size of the arrows on top of the grid*/
+  arrow_rect.x = w / 20;
+  arrow_rect.y = w / 20;
+  arrow_rect.w = w / 3;
+  arrow_rect.h = h / 20;
+  SDL_QueryTexture(env->back_arrow, NULL, NULL, NULL, NULL);
+
+  for (; arrow_rect.x < w - arrow_rect.x; arrow_rect.x += arrow_rect.w)
+  {
+
+    SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
+  }
   /* get padding and size of the grid to be centered */
   game_grid.x = w / 10;
   game_grid.y = h / 10;
@@ -113,10 +129,24 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
 /* **************************************************************** */
 
-bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e)
+bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 {
   int w, h;
+  int i, j;
+
+  SDL_Rect game_grid;
+  SDL_Rect square;
+
   SDL_GetWindowSize(win, &w, &h);
+
+  /* get padding and size of the grid to be centered */
+  game_grid.x = w / 10;
+  game_grid.y = h / 10;
+  game_grid.w = w - (2 * game_grid.x);
+  game_grid.h = h - (2 * game_grid.y);
+
+  square.w = game_grid.w / DEFAULT_SIZE;
+  square.h = game_grid.h / DEFAULT_SIZE;
 
   if (e->type == SDL_QUIT)
   {
@@ -127,8 +157,20 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e)
   {
     SDL_Point mouse;
     SDL_GetMouseState(&mouse.x, &mouse.y);
-    env->fire_x = mouse.x;
-    env->fire_y = mouse.y;
+    i = (mouse.y - game_grid.y) / square.h;
+    j = (mouse.x - game_grid.x) / square.w;
+
+    if (e->button.button == SDL_BUTTON_LEFT)
+    {
+      if (!game_is_lightbulb(g, i, j))
+      {
+        game_play_move(g, i, j, S_LIGHTBULB);
+      }
+      else
+      {
+        game_play_move(g, i, j, S_BLANK);
+      }
+    }
   }
 
   return false;

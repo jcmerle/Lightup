@@ -39,10 +39,11 @@ int main(int argc, char *argv[])
   /* initialize your environment */
   Env *env = init(win, ren, argc, argv);
 
-  /* if game en option je load le game sinon game_default*/
+  /*
+  if game en option je load le game sinon game_default
+  */
 
   game g = game_default();
-  /* appele game_load*/
 
   /* main render loop */
   SDL_Event e;
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
     while (SDL_PollEvent(&e))
     {
       /* process your events */
-      quit = process(win, ren, env, &e);
+      quit = process(win, ren, env, &e, g);
       if (quit)
         break;
     }
