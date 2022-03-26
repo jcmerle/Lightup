@@ -32,10 +32,7 @@ struct Env_t
   SDL_Texture *number3;
   SDL_Texture *number4;
   SDL_Texture *text;
-<<<<<<< HEAD
   SDL_Texture *text_r;
-=======
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
 };
 
 /* **************************************************************** */
@@ -164,7 +161,6 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   arrow_rect.x = (game_grid.x + game_grid.w) - arrow_rect.w;
   SDL_RenderCopy(ren, env->forward_arrow, NULL, &arrow_rect);
 
-<<<<<<< HEAD
   /* get scaling and size of the buttons at the bottom of the grid*/
   bottom_buttons_rect.w = arrow_rect.w;
   bottom_buttons_rect.h = arrow_rect.h;
@@ -177,30 +173,6 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   SDL_RenderCopy(ren, env->solve_button, NULL, &bottom_buttons_rect);
   bottom_buttons_rect.x = (game_grid.x + game_grid.w) - bottom_buttons_rect.w;
   SDL_RenderCopy(ren, env->quit_button, NULL, &bottom_buttons_rect);
-=======
-  /* get padding and size of the grid to be centered */
-  game_grid.x = w / 10;
-  game_grid.y = h / 10;
-  game_grid.w = w - (2 * game_grid.x);
-  game_grid.h = h - (2 * game_grid.y);
-
-  arrow_rect.y = game_grid.y / 10;
-  arrow_rect.x = game_grid.x;
-  arrow_rect.w = game_grid.w / 6;
-  arrow_rect.h = game_grid.y - 2 * arrow_rect.y;
-  SDL_QueryTexture(env->back_arrow, NULL, NULL, NULL, NULL);
-
-  SDL_SetRenderDrawColor(ren, green_color.r, green_color.g, green_color.b, green_color.a);
-
-  SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
-  SDL_RenderDrawRect(ren, &arrow_rect);
-  arrow_rect.x = game_grid.w / 2;
-  SDL_RenderCopy(ren, env->repeat_arrow, NULL, &arrow_rect);
-  arrow_rect.x = game_grid.w;
-  SDL_RenderDrawRect(ren, &arrow_rect);
-  SDL_RenderCopy(ren, env->forward_arrow, NULL, &arrow_rect);
-  SDL_RenderDrawRect(ren, &arrow_rect);
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
 
   /* get size of a square depending of the window's size */
   SDL_QueryTexture(env->pacman, NULL, NULL, NULL, NULL);
@@ -212,19 +184,12 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
     for (square.x = game_grid.x; square.x <= game_grid.w + game_grid.x - square.w; square.x += square.w)
     {
 
-<<<<<<< HEAD
-      int i = (square.y - game_grid.y) / square.h;
-      int j = (square.x - game_grid.x) / square.w;
-
-=======
       uint i = (square.y - game_grid.y) / square.h;
       uint j = (square.x - game_grid.x) / square.w;
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
       if (game_is_blank(g, i, j))
       {
         if (game_is_lighted(g, i, j))
         {
-<<<<<<< HEAD
           SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(ren, &square);
         }
@@ -269,56 +234,6 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
             SDL_RenderCopy(ren, env->number3, NULL, &sq_aux);
           if (black_number == 4)
             SDL_RenderCopy(ren, env->number4, NULL, &sq_aux);
-=======
-          if (game_is_lighted(g, i, j))
-          {
-            SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderFillRect(ren, &square);
-          }
-          else
-          {
-            sq_aux.x = square.x + game_grid.x / 2;
-            sq_aux.y = square.y + game_grid.y / 2;
-            sq_aux.w = square.w / 7;
-            sq_aux.h = square.h / 7;
-            SDL_RenderCopy(ren, env->dot, NULL, &sq_aux);
-          }
-        }
-      }
-
-      else if (game_is_lightbulb(g, i, j))
-      {
-        SDL_RenderCopy(ren, env->pacman, NULL, &square);
-      }
-
-      else if (game_is_black(g, i, j))
-      {
-        SDL_SetRenderDrawColor(ren, 0, 255, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(ren, &square);
-        int black_number = game_get_black_number(g, i, j);
-        if (black_number != -1)
-        {
-          SDL_SetRenderDrawColor(ren, 25, 75, 240, SDL_ALPHA_OPAQUE); // color of walls
-          SDL_RenderDrawRect(ren, &square);
-          int black_number = game_get_black_number(g, i, j);
-          if (black_number != -1)
-          {
-            sq_aux.x = square.x + game_grid.x / 7;
-            sq_aux.y = square.y + game_grid.y / 7;
-            sq_aux.w = square.w / 1.3;
-            sq_aux.h = square.h / 1.3;
-            if (black_number == 0)
-              SDL_RenderCopy(ren, env->number0, NULL, &sq_aux);
-            if (black_number == 1)
-              SDL_RenderCopy(ren, env->number1, NULL, &sq_aux);
-            if (black_number == 2)
-              SDL_RenderCopy(ren, env->number2, NULL, &sq_aux);
-            if (black_number == 3)
-              SDL_RenderCopy(ren, env->number3, NULL, &sq_aux);
-            if (black_number == 4)
-              SDL_RenderCopy(ren, env->number4, NULL, &sq_aux);
-          }
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
         }
       }
     }
@@ -343,20 +258,13 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 {
   int w, h;
-<<<<<<< HEAD
-  int i, j;
-=======
   uint i, j;
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
 
   SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
   SDL_Rect arrow_rect;
-<<<<<<< HEAD
   SDL_Rect bottom_buttons_rect;
-=======
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
 
   SDL_GetWindowSize(win, &w, &h);
 
@@ -401,18 +309,10 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
     /* if we click inside the grid */
     if (mouse.y > game_grid.y && mouse.y < game_grid.y + game_grid.h && mouse.x >= game_grid.x && mouse.x < game_grid.x + game_grid.w)
     {
-<<<<<<< HEAD
       if (e->button.button == SDL_BUTTON_LEFT)
       {
         if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
         {
-=======
-      if (mouse.y > game_grid.y && mouse.y < h - game_grid.y && mouse.x > game_grid.x && mouse.x < w - game_grid.x)
-      {
-        if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
-        {
-          printf("lightbulb i : %d j : %d\n", i, j);
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
           game_play_move(g, i, j, S_LIGHTBULB);
         }
         else if (game_check_move(g, i, j, S_BLANK))
@@ -420,7 +320,6 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
           game_play_move(g, i, j, S_BLANK);
         }
       }
-<<<<<<< HEAD
       else if (e->button.button == SDL_BUTTON_RIGHT)
       {
         if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK))
@@ -430,22 +329,6 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
         else if (game_check_move(g, i, j, S_MARK))
         {
           game_play_move(g, i, j, S_BLANK);
-=======
-
-      else if (mouse.y >= arrow_rect.y && mouse.y < game_grid.y - arrow_rect.y)
-      {
-        if (mouse.x >= arrow_rect.x && mouse.x < arrow_rect.x + arrow_rect.w)
-        {
-          game_undo(g);
-        }
-        else if (mouse.x >= arrow_rect.x + 2 * arrow_rect.w && mouse.x < arrow_rect.x + 3 * arrow_rect.w)
-        {
-          game_restart(g);
-        }
-        else if (mouse.x >= arrow_rect.x + 4 * arrow_rect.w && mouse.x < arrow_rect.x + 5 * arrow_rect.w)
-        {
-          game_redo(g);
->>>>>>> a94a9adbdb7a9348675307058646a842bb988e08
         }
       }
     }
