@@ -185,6 +185,7 @@ bool game_solve(game g)
 {
   assert(g);
   game copy = game_copy(g);
+  game_restart(g);
 
   if (game_solve_aux(game_nb_rows(g), game_nb_cols(g), 0, 0, g))
   {
@@ -201,17 +202,17 @@ bool game_solve(game g)
 
 /*----------------Game_nb_solution-----------------*/
 
-  uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename)
+uint game_nb_solutions_aux(uint coord_i, uint coord_j, uint *nb_sol, game g, game copy, char *filename)
+{
+  // Recurrence stop condition
+  if (coord_i == game_nb_rows(g) && coord_j == 0)
   {
-    // Recurrence stop condition
-    if (coord_i == game_nb_rows(g) && coord_j == 0)
-    {
     if (game_is_over(g))
     {
       (*nb_sol)++;
     }
     return (*nb_sol);
-    }
+  }
 
   // Double loop to see if the game has an error and so if it is necessary to continue
   // if the game has an error we stop and return false.
