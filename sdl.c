@@ -27,7 +27,7 @@ struct Env_t
   SDL_Texture *number2;
   SDL_Texture *number3;
   SDL_Texture *number4;
-  SDL_Texture* text;
+  SDL_Texture *text;
 };
 
 /* **************************************************************** */
@@ -42,13 +42,13 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
 
   /* init text textyre using minecraft font */
   SDL_Color color = {0, 0, 255, 255};
-  TTF_Font* font = TTF_OpenFont(FONT, 40);
-  if (!font) ERROR("TTF_OpenFont: %s\n", FONT);
-  SDL_Surface* cong = TTF_RenderText_Blended(font, "Congratulations!", color);
+  TTF_Font *font = TTF_OpenFont(FONT, 40);
+  if (!font)
+    ERROR("TTF_OpenFont: %s\n", FONT);
+  SDL_Surface *cong = TTF_RenderText_Blended(font, "Congratulations!", color);
   env->text = SDL_CreateTextureFromSurface(ren, cong);
   SDL_FreeSurface(cong);
   TTF_CloseFont(font);
-
 
   /* init fire texture from PNG image */
   env->fire = IMG_LoadTexture(ren, FIRE);
@@ -59,12 +59,12 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   env->back_arrow = IMG_LoadTexture(ren, BACK_ARROW);
   if (!env->back_arrow)
     ERROR("IMG_LoadTexture: %s\n", BACK_ARROW);
-  
+
   /* init forward_arrow texture from PNG image */
   env->forward_arrow = IMG_LoadTexture(ren, FORWARD_ARROW);
   if (!env->forward_arrow)
     ERROR("IMG_LoadTexture: %s\n", FORWARD_ARROW);
-  
+
   /* init repeat arrow texture from PNG image */
   env->repeat_arrow = IMG_LoadTexture(ren, REPEAT_ARROW);
   if (!env->repeat_arrow)
@@ -84,12 +84,12 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   env->number2 = IMG_LoadTexture(ren, NUMBER2);
   if (!env->number2)
     ERROR("IMG_LoadTexture: %s\n", NUMBER2);
-  
+
   /* init number 3 texture from PNG image */
   env->number3 = IMG_LoadTexture(ren, NUMBER3);
   if (!env->number3)
     ERROR("IMG_LoadTexture: %s\n", NUMBER3);
-  
+
   /* init number 4 texture from PNG image */
   env->number4 = IMG_LoadTexture(ren, NUMBER4);
   if (!env->number4)
@@ -115,26 +115,28 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   int w, h;
   SDL_GetWindowSize(win, &w, &h);
 
-  /* get padding and size of the arrows on top of the grid*/
-  arrow_rect.x = w / 20;
-  arrow_rect.y = w / 20;
-  arrow_rect.w = w / 6;
-  arrow_rect.h = h / 20;
-  SDL_QueryTexture(env->back_arrow, NULL, NULL, NULL, NULL);
-
-  SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
-  arrow_rect.x += 2 * arrow_rect.w;
-  SDL_RenderCopy(ren, env->repeat_arrow, NULL, &arrow_rect);
-  arrow_rect.x += 2 * arrow_rect.w;
-  SDL_RenderCopy(ren, env->forward_arrow, NULL, &arrow_rect);
-
   /* get padding and size of the grid to be centered */
   game_grid.x = w / 10;
   game_grid.y = h / 10;
   game_grid.w = w - (2 * game_grid.x);
   game_grid.h = h - (2 * game_grid.y);
 
-  // SDL_SetRenderDrawColor(ren, green_color.r, green_color.g, green_color.b, green_color.a);
+  arrow_rect.y = game_grid.y / 10;
+  arrow_rect.x = game_grid.x;
+  arrow_rect.w = game_grid.w / 6;
+  arrow_rect.h = game_grid.y - 2 * arrow_rect.y;
+  SDL_QueryTexture(env->back_arrow, NULL, NULL, NULL, NULL);
+
+  SDL_SetRenderDrawColor(ren, green_color.r, green_color.g, green_color.b, green_color.a);
+
+  SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
+  SDL_RenderDrawRect(ren, &arrow_rect);
+  arrow_rect.x = game_grid.w / 2;
+  SDL_RenderCopy(ren, env->repeat_arrow, NULL, &arrow_rect);
+  arrow_rect.x = game_grid.w;
+  SDL_RenderDrawRect(ren, &arrow_rect);
+  SDL_RenderCopy(ren, env->forward_arrow, NULL, &arrow_rect);
+  SDL_RenderDrawRect(ren, &arrow_rect);
 
   /* get size of a square depending of the window's size */
   SDL_QueryTexture(env->fire, NULL, NULL, NULL, NULL);
@@ -146,37 +148,39 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
     for (square.x = game_grid.x; square.x < game_grid.w + game_grid.x - square.w; square.x += square.w)
     {
 
-      int i = (square.y - game_grid.y) / square.h;
-      int j = (square.x - game_grid.x) / square.w;
-      if((i <= game_nb_cols(g) && j <= game_nb_rows(g)))
+      uint i = (square.y - game_grid.y) / square.h;
+      uint j = (square.x - game_grid.x) / square.w;
+      if (game_is_blank(g, i, j))
       {
-        if (game_is_blank(g, i, j))
+        if (game_is_lighted(g, i, j))
         {
-          if (game_is_lighted(g, i, j))
-          {
-            SDL_SetRenderDrawColor(ren, 255, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderFillRect(ren, &square);
-          }
-        }
-
-        else if (game_is_lightbulb(g, i, j))
-        {
-          SDL_RenderCopy(ren, env->fire, NULL, &square);
-        }
-
-        else if (game_is_black(g, i, j))
-        {
-          SDL_SetRenderDrawColor(ren, 0, 255, 0, SDL_ALPHA_OPAQUE);
+          SDL_SetRenderDrawColor(ren, 255, 0, 0, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(ren, &square);
-          int black_number = game_get_black_number(g, i, j);
-          if(black_number != -1){
-            if (black_number==0) SDL_RenderCopy(ren, env->number0, NULL, &square);
-            if (black_number==1) SDL_RenderCopy(ren, env->number1, NULL, &square);
-            if (black_number==2) SDL_RenderCopy(ren, env->number2, NULL, &square);
-            if (black_number==3) SDL_RenderCopy(ren, env->number3, NULL, &square);
-            if (black_number==4) SDL_RenderCopy(ren, env->number4, NULL, &square);          
-          }
-          
+        }
+      }
+
+      else if (game_is_lightbulb(g, i, j))
+      {
+        SDL_RenderCopy(ren, env->fire, NULL, &square);
+      }
+
+      else if (game_is_black(g, i, j))
+      {
+        SDL_SetRenderDrawColor(ren, 0, 255, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderFillRect(ren, &square);
+        int black_number = game_get_black_number(g, i, j);
+        if (black_number != -1)
+        {
+          if (black_number == 0)
+            SDL_RenderCopy(ren, env->number0, NULL, &square);
+          if (black_number == 1)
+            SDL_RenderCopy(ren, env->number1, NULL, &square);
+          if (black_number == 2)
+            SDL_RenderCopy(ren, env->number2, NULL, &square);
+          if (black_number == 3)
+            SDL_RenderCopy(ren, env->number3, NULL, &square);
+          if (black_number == 4)
+            SDL_RenderCopy(ren, env->number4, NULL, &square);
         }
       }
       /* draw the grid */
@@ -188,7 +192,8 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   SDL_SetRenderDrawColor(ren, blue_color.r, blue_color.g, blue_color.b, blue_color.a);
   SDL_RenderDrawRect(ren, &game_grid);
 
-  if(game_is_over(g)){
+  if (game_is_over(g))
+  {
     SDL_QueryTexture(env->text, NULL, NULL, &rect.w, &rect.h);
     rect.x = w / 2 - rect.w / 2;
     rect.y = h / 2 - rect.h / 2;
@@ -196,7 +201,6 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
     SDL_RenderPresent(ren);
     SDL_Delay(5000);
   }
-
 }
 
 /* **************************************************************** */
@@ -204,28 +208,33 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 {
   int w, h;
-  int i, j;
-  
+  uint i, j;
+
   SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
+  SDL_Rect arrow_rect;
 
   SDL_GetWindowSize(win, &w, &h);
 
-  /* get padding and size of the grid to be centered */
+  /* get scaling and size of the grid to be centered */
   game_grid.x = w / 10;
   game_grid.y = h / 10;
   game_grid.w = w - (2 * game_grid.x);
   game_grid.h = h - (2 * game_grid.y);
 
-  square.w = game_grid.w / DEFAULT_SIZE;
-  square.h = game_grid.h / DEFAULT_SIZE;
+  arrow_rect.y = game_grid.y / 10;
+  arrow_rect.x = w / 6;
+  arrow_rect.w = (w - arrow_rect.x) / 6;
+  arrow_rect.h = h / 20;
+
+  square.w = game_grid.w / game_nb_cols(g);
+  square.h = game_grid.h / game_nb_rows(g);
 
   if (e->type == SDL_QUIT)
   {
     return true;
   }
-
 
   else if (e->type == SDL_MOUSEBUTTONDOWN)
   {
@@ -236,18 +245,33 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 
     if (e->button.button == SDL_BUTTON_LEFT)
     {
-      if (mouse.y < game_grid.y)
+      if (mouse.y > game_grid.y && mouse.y < h - game_grid.y && mouse.x > game_grid.x && mouse.x < w - game_grid.x)
       {
-        
+        if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
+        {
+          printf("lightbulb i : %d j : %d\n", i, j);
+          game_play_move(g, i, j, S_LIGHTBULB);
+        }
+        else if (game_check_move(g, i, j, S_BLANK))
+        {
+          game_play_move(g, i, j, S_BLANK);
+        }
       }
-      
-      if (!game_is_lightbulb(g, i, j))
+
+      else if (mouse.y >= arrow_rect.y && mouse.y < game_grid.y - arrow_rect.y)
       {
-        game_play_move(g, i, j, S_LIGHTBULB);
-      }
-      else
-      {
-        game_play_move(g, i, j, S_BLANK);
+        if (mouse.x >= arrow_rect.x && mouse.x < arrow_rect.x + arrow_rect.w)
+        {
+          game_undo(g);
+        }
+        else if (mouse.x >= arrow_rect.x + 2 * arrow_rect.w && mouse.x < arrow_rect.x + 3 * arrow_rect.w)
+        {
+          game_restart(g);
+        }
+        else if (mouse.x >= arrow_rect.x + 4 * arrow_rect.w && mouse.x < arrow_rect.x + 5 * arrow_rect.w)
+        {
+          game_redo(g);
+        }
       }
     }
   }
