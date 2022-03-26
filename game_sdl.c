@@ -6,10 +6,12 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "sdl.h"
 #include "game.h"
 #include "game_aux.h"
+#include "game_tools.h"
 
 /* **************************************************************** */
 
@@ -37,13 +39,13 @@ int main(int argc, char *argv[])
     ERROR("Error: SDL_CreateRenderer (%s)", SDL_GetError());
 
   /* initialize your environment */
+  game g = NULL;
+  if (argc == 2)
+    g = game_load(argv[1]);
+  else
+    g = game_default();
+  assert(g);
   Env *env = init(win, ren, argc, argv);
-
-  /*
-  if game en option je load le game sinon game_default
-  */
-
-  game g = game_default();
 
   /* main render loop */
   SDL_Event e;
@@ -55,10 +57,12 @@ int main(int argc, char *argv[])
     {
       /* process your events */
       quit = process(win, ren, env, &e, g);
-      if (quit)
+      if (quit){ 
         break;
+      }
     }
 
+    
     /* background in gray */
     SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
     SDL_RenderClear(ren);
@@ -67,6 +71,7 @@ int main(int argc, char *argv[])
     render(win, ren, env, g);
     SDL_RenderPresent(ren);
     SDL_Delay(DELAY);
+    
   }
 
   /* clean your environment */

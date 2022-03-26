@@ -7,22 +7,27 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "sdl.h"
 #include "game.h"
+#include "game_aux.h"
+#include "game_tools.h"
+#include "game_ext.h"
 
 /* **************************************************************** */
-
-#define FIRE "fire.png"
-#define BACK_ARROW "back_arrow.bmp"
-
-/* **************************************************************** */
-
 struct Env_t
 {
   SDL_Texture *fire;
   SDL_Texture *back_arrow;
-  int fire_x, fire_y;
+  SDL_Texture *forward_arrow;
+  SDL_Texture *repeat_arrow;
+  SDL_Texture *number0;
+  SDL_Texture *number1;
+  SDL_Texture *number2;
+  SDL_Texture *number3;
+  SDL_Texture *number4;
+  SDL_Texture* text;
 };
 
 /* **************************************************************** */
@@ -35,15 +40,60 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   int w, h;
   SDL_GetWindowSize(win, &w, &h);
 
+  /* init text textyre using minecraft font */
+  SDL_Color color = {0, 0, 255, 255};
+  TTF_Font* font = TTF_OpenFont(FONT, 40);
+  if (!font) ERROR("TTF_OpenFont: %s\n", FONT);
+  SDL_Surface* cong = TTF_RenderText_Blended(font, "Congratulations!", color);
+  env->text = SDL_CreateTextureFromSurface(ren, cong);
+  SDL_FreeSurface(cong);
+  TTF_CloseFont(font);
+
+
   /* init fire texture from PNG image */
   env->fire = IMG_LoadTexture(ren, FIRE);
   if (!env->fire)
     ERROR("IMG_LoadTexture: %s\n", FIRE);
 
-  /* init fire texture from PNG image */
+  /* init back arrow texture from PNG image */
   env->back_arrow = IMG_LoadTexture(ren, BACK_ARROW);
   if (!env->back_arrow)
     ERROR("IMG_LoadTexture: %s\n", BACK_ARROW);
+  
+  /* init forward_arrow texture from PNG image */
+  env->forward_arrow = IMG_LoadTexture(ren, FORWARD_ARROW);
+  if (!env->forward_arrow)
+    ERROR("IMG_LoadTexture: %s\n", FORWARD_ARROW);
+  
+  /* init repeat arrow texture from PNG image */
+  env->repeat_arrow = IMG_LoadTexture(ren, REPEAT_ARROW);
+  if (!env->repeat_arrow)
+    ERROR("IMG_LoadTexture: %s\n", REPEAT_ARROW);
+
+  /* init number 0 texture from PNG image */
+  env->number0 = IMG_LoadTexture(ren, NUMBER0);
+  if (!env->number0)
+    ERROR("IMG_LoadTexture: %s\n", NUMBER0);
+
+  /* init number 1 texture from PNG image */
+  env->number1 = IMG_LoadTexture(ren, NUMBER1);
+  if (!env->number1)
+    ERROR("IMG_LoadTexture: %s\n", NUMBER1);
+
+  /* init number 2 texture from PNG image */
+  env->number2 = IMG_LoadTexture(ren, NUMBER2);
+  if (!env->number2)
+    ERROR("IMG_LoadTexture: %s\n", NUMBER2);
+  
+  /* init number 3 texture from PNG image */
+  env->number3 = IMG_LoadTexture(ren, NUMBER3);
+  if (!env->number3)
+    ERROR("IMG_LoadTexture: %s\n", NUMBER3);
+  
+  /* init number 4 texture from PNG image */
+  env->number4 = IMG_LoadTexture(ren, NUMBER4);
+  if (!env->number4)
+    ERROR("IMG_LoadTexture: %s\n", NUMBER4);
 
   return env;
 }
@@ -68,15 +118,16 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   /* get padding and size of the arrows on top of the grid*/
   arrow_rect.x = w / 20;
   arrow_rect.y = w / 20;
-  arrow_rect.w = w / 3;
+  arrow_rect.w = w / 6;
   arrow_rect.h = h / 20;
   SDL_QueryTexture(env->back_arrow, NULL, NULL, NULL, NULL);
 
-  for (; arrow_rect.x < w - arrow_rect.x; arrow_rect.x += arrow_rect.w)
-  {
+  SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
+  arrow_rect.x += 2 * arrow_rect.w;
+  SDL_RenderCopy(ren, env->repeat_arrow, NULL, &arrow_rect);
+  arrow_rect.x += 2 * arrow_rect.w;
+  SDL_RenderCopy(ren, env->forward_arrow, NULL, &arrow_rect);
 
-    SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
-  }
   /* get padding and size of the grid to be centered */
   game_grid.x = w / 10;
   game_grid.y = h / 10;
@@ -97,26 +148,37 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
       int i = (square.y - game_grid.y) / square.h;
       int j = (square.x - game_grid.x) / square.w;
-      if (game_is_blank(g, i, j))
+      if((i <= game_nb_cols(g) && j <= game_nb_rows(g)))
       {
-        if (game_is_lighted(g, i, j))
+        if (game_is_blank(g, i, j))
         {
-          SDL_SetRenderDrawColor(ren, 255, 0, 0, SDL_ALPHA_OPAQUE);
+          if (game_is_lighted(g, i, j))
+          {
+            SDL_SetRenderDrawColor(ren, 255, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderFillRect(ren, &square);
+          }
+        }
+
+        else if (game_is_lightbulb(g, i, j))
+        {
+          SDL_RenderCopy(ren, env->fire, NULL, &square);
+        }
+
+        else if (game_is_black(g, i, j))
+        {
+          SDL_SetRenderDrawColor(ren, 0, 255, 0, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(ren, &square);
+          int black_number = game_get_black_number(g, i, j);
+          if(black_number != -1){
+            if (black_number==0) SDL_RenderCopy(ren, env->number0, NULL, &square);
+            if (black_number==1) SDL_RenderCopy(ren, env->number1, NULL, &square);
+            if (black_number==2) SDL_RenderCopy(ren, env->number2, NULL, &square);
+            if (black_number==3) SDL_RenderCopy(ren, env->number3, NULL, &square);
+            if (black_number==4) SDL_RenderCopy(ren, env->number4, NULL, &square);          
+          }
+          
         }
       }
-
-      else if (game_is_lightbulb(g, i, j))
-      {
-        SDL_RenderCopy(ren, env->fire, NULL, &square);
-      }
-
-      else if (game_is_black(g, i, j))
-      {
-        SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(ren, &square);
-      }
-
       /* draw the grid */
       SDL_SetRenderDrawColor(ren, green_color.r, green_color.g, green_color.b, green_color.a);
       SDL_RenderDrawRect(ren, &square);
@@ -125,6 +187,16 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   /* draw the grid */
   SDL_SetRenderDrawColor(ren, blue_color.r, blue_color.g, blue_color.b, blue_color.a);
   SDL_RenderDrawRect(ren, &game_grid);
+
+  if(game_is_over(g)){
+    SDL_QueryTexture(env->text, NULL, NULL, &rect.w, &rect.h);
+    rect.x = w / 2 - rect.w / 2;
+    rect.y = h / 2 - rect.h / 2;
+    SDL_RenderCopy(ren, env->text, NULL, &rect);
+    SDL_RenderPresent(ren);
+    SDL_Delay(5000);
+  }
+
 }
 
 /* **************************************************************** */
@@ -133,7 +205,8 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 {
   int w, h;
   int i, j;
-
+  
+  SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
 
@@ -153,6 +226,7 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
     return true;
   }
 
+
   else if (e->type == SDL_MOUSEBUTTONDOWN)
   {
     SDL_Point mouse;
@@ -162,6 +236,11 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 
     if (e->button.button == SDL_BUTTON_LEFT)
     {
+      if (mouse.y < game_grid.y)
+      {
+        
+      }
+      
       if (!game_is_lightbulb(g, i, j))
       {
         game_play_move(g, i, j, S_LIGHTBULB);
@@ -173,6 +252,11 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
     }
   }
 
+  if (game_is_over(g))
+  {
+    return true;
+  }
+
   return false;
 }
 
@@ -181,6 +265,14 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 void clean(SDL_Window *win, SDL_Renderer *ren, Env *env)
 {
   SDL_DestroyTexture(env->fire);
+  SDL_DestroyTexture(env->back_arrow);
+  SDL_DestroyTexture(env->forward_arrow);
+  SDL_DestroyTexture(env->repeat_arrow);
+  SDL_DestroyTexture(env->number0);
+  SDL_DestroyTexture(env->number1);
+  SDL_DestroyTexture(env->number2);
+  SDL_DestroyTexture(env->number3);
+  SDL_DestroyTexture(env->number4);
 
   free(env);
 }

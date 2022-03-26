@@ -48,6 +48,19 @@ typedef struct Env_t Env;
 
 /* **************************************************************** */
 
+#define FIRE "fire.png"
+#define BACK_ARROW "back_arrow.bmp"
+#define FORWARD_ARROW "forward_arrow.bmp"
+#define REPEAT_ARROW "repeat_arrow.bmp"
+#define NUMBER0 "number0.png"
+#define NUMBER1 "number1.png"
+#define NUMBER2 "number2.png"
+#define NUMBER3 "number3.png"
+#define NUMBER4 "number4.png"
+#define FONT "Minecraft.ttf"
+
+/* **************************************************************** */
+
 Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[]);
 void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g);
 void clean(SDL_Window *win, SDL_Renderer *ren, Env *env);

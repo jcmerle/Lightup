@@ -94,7 +94,7 @@ add_test(test_game_solve ./game_test "game_solve")
 add_test(test_game_nb_solutions ./game_test "game_nb_solutions")
 
 ## copy useful data files in build dir
-foreach(file "ressources/fire.png" "ressources/forward_arrow.bmp" "ressources/back_arrow.bmp" "ressources/repeat_arrow.bmp")
+foreach(file "ressources/fire.png" "ressources/forward_arrow.bmp" "ressources/back_arrow.bmp" "ressources/repeat_arrow.bmp" "ressources/number0.png" "ressources/number1.png" "ressources/number2.png" "ressources/number3.png" "ressources/number4.png" "ressources/Minecraft.ttf")
   file(COPY ${file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endforeach(data_file)
 #############################  #############################
