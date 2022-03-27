@@ -328,17 +328,11 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
 void LeftClickActions(game g, uint i, uint j)
 {
-  /* We make sure the coordinates are valid */
-  if (i >= game_nb_rows(g))
-    i = game_nb_rows(g) - 1;
-  if (j >= game_nb_cols(g))
-    j = game_nb_cols(g) - 1;
-
-  if (game_check_move(g, i, j, S_LIGHTBULB) && !game_is_lightbulb(g, i, j))
+  if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB) && !game_is_marked(g, i, j))
   {
     game_play_move(g, i, j, S_LIGHTBULB);
   }
-  else if (game_check_move(g, i, j, S_BLANK))
+  else if (game_check_move(g, i, j, S_BLANK) && !game_is_marked(g, i, j))
   {
     game_play_move(g, i, j, S_BLANK);
   }
@@ -348,17 +342,11 @@ void LeftClickActions(game g, uint i, uint j)
 
 void RightClickActions(game g, uint i, uint j)
 {
-  /* We make sure the coordinates are valid */
-  if (i >= game_nb_rows(g))
-    i = game_nb_rows(g) - 1;
-  if (j >= game_nb_cols(g))
-    j = game_nb_cols(g) - 1;
-
-  if (game_check_move(g, i, j, S_MARK) && !game_is_marked(g, i, j))
+  if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK) && !game_is_lightbulb(g, i, j))
   {
     game_play_move(g, i, j, S_MARK);
   }
-  else if (game_check_move(g, i, j, S_BLANK))
+  else if (game_check_move(g, i, j, S_BLANK) && !game_is_lightbulb(g, i, j))
   {
     game_play_move(g, i, j, S_BLANK);
   }
