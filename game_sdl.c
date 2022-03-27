@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
   else
     g = game_default();
   assert(g);
-  Env *env = init(win, ren, argc, argv);
+  Env *env = init(win, ren);
 
   /* main render loop */
   SDL_Event e;
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     while (SDL_PollEvent(&e))
     {
       /* process your events */
-      quit = process(win, ren, env, &e, g);
+      quit = process(win, &e, g);
       if (quit)
       {
         break;

@@ -82,7 +82,7 @@ void GetSquareSize(game g, SDL_Rect *game_grid, SDL_Rect *square)
 
 /* **************************************************************** */
 
-Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
+Env *init(SDL_Window *win, SDL_Renderer *ren)
 {
   Env *env = malloc(sizeof(struct Env_t));
 
@@ -192,17 +192,17 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   env->red1 = IMG_LoadTexture(ren, RED1);
   if (!env->red1)
     ERROR("IMG_LoadTexture: %s\n", RED1);
-  
+
   /* init number 2 red texture from PNG image */
   env->red2 = IMG_LoadTexture(ren, RED2);
   if (!env->red2)
     ERROR("IMG_LoadTexture: %s\n", RED2);
-  
+
   /* init number 3 red texture from PNG image */
   env->red3 = IMG_LoadTexture(ren, RED3);
   if (!env->red3)
     ERROR("IMG_LoadTexture: %s\n", RED3);
-  
+
   /* init number 4 red texture from PNG image */
   env->red4 = IMG_LoadTexture(ren, RED4);
   if (!env->red4)
@@ -435,12 +435,11 @@ bool BottomButtonsActions(game g, SDL_Point *mouse, SDL_Rect *game_grid, SDL_Rec
 }
 /* **************************************************************** */
 
-bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
+bool process(SDL_Window *win, SDL_Event *e, game g)
 {
   int w, h;
   uint i, j;
 
-  SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
   SDL_Rect top_buttons_rect;
@@ -498,13 +497,20 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
         return true;
     }
   }
-  else if (e->type == SDL_KEYDOWN){
-    if (e->key.keysym.sym == SDLK_ESCAPE || e->key.keysym.sym == SDLK_q) return true;
-    if (e->key.keysym.sym == SDLK_z) game_undo(g);
-    if (e->key.keysym.sym == SDLK_y) game_redo(g);
-    if (e->key.keysym.sym == SDLK_r) game_restart(g);
-    if (e->key.keysym.sym == SDLK_w) game_save(g, "game_save");
-    if (e->key.keysym.sym == SDLK_s) game_solve(g);
+  else if (e->type == SDL_KEYDOWN)
+  {
+    if (e->key.keysym.sym == SDLK_ESCAPE || e->key.keysym.sym == SDLK_q)
+      return true;
+    if (e->key.keysym.sym == SDLK_z)
+      game_undo(g);
+    if (e->key.keysym.sym == SDLK_y)
+      game_redo(g);
+    if (e->key.keysym.sym == SDLK_r)
+      game_restart(g);
+    if (e->key.keysym.sym == SDLK_w)
+      game_save(g, "game_save");
+    if (e->key.keysym.sym == SDLK_s)
+      game_solve(g);
   }
   if (game_is_over(g))
   {
