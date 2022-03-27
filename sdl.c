@@ -277,11 +277,13 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
       {
         if (game_is_lighted(g, i, j))
         {
+          // make case all black when lighted
           SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(ren, &square);
         }
         else
         {
+          // when not lighted show dot png (represents the small fruits pacman has to eat)
           sq_aux.x = square.x + game_grid.x / 2;
           sq_aux.y = square.y + game_grid.y / 2;
           sq_aux.w = square.w / 7;
@@ -292,6 +294,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
       else if (game_is_marked(g, i, j))
       {
+        // when marked shows cherries
         sq_aux.x = square.x + game_grid.x / 7;
         sq_aux.y = square.y + game_grid.y / 7;
         sq_aux.w = square.w / 1.3;
@@ -301,6 +304,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
       else if (game_is_lightbulb(g, i, j))
       {
+        // pacman when lightbulb
         SDL_RenderCopy(ren, env->pacman, NULL, &square);
       }
 
@@ -311,6 +315,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
         int black_number = game_get_black_number(g, i, j);
         if (black_number != -1)
         {
+          // shows numbers on top of walls when there is one
           sq_aux.x = square.x + game_grid.x / 7;
           sq_aux.y = square.y + game_grid.y / 7;
           sq_aux.w = square.w / 1.3;
@@ -334,6 +339,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
           int black_number = game_get_black_number(g, i, j);
           if (black_number != -1)
           {
+            // in case of error shows red numbers 
             sq_aux.x = square.x + game_grid.x / 7;
             sq_aux.y = square.y + game_grid.y / 7;
             sq_aux.w = square.w / 1.3;
@@ -352,6 +358,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
         }
         else
         {
+          // shows pacman in red when errors between 2 lightbulbs
           SDL_RenderCopy(ren, env->pacmanred, NULL, &square);
         }
       }
@@ -502,6 +509,7 @@ bool process(SDL_Window *win, SDL_Event *e, game g)
   }
   else if (e->type == SDL_KEYDOWN)
   {
+    // when SDLK_key is pressed, execute one function
     if (e->key.keysym.sym == SDLK_ESCAPE || e->key.keysym.sym == SDLK_q)
       return true;
     if (e->key.keysym.sym == SDLK_z)
