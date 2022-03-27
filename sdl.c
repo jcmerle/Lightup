@@ -1,19 +1,19 @@
 // SDL2 Demo by aurelien.esnard@u-bordeaux.fr
 
+#include "sdl.h"
+
 #include <SDL.h>
 #include <SDL_image.h> // required to load transparent texture from PNG
 #include <SDL_ttf.h>   // required to use TTF fonts
-
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
-#include "sdl.h"
 #include "game.h"
 #include "game_aux.h"
-#include "game_tools.h"
 #include "game_ext.h"
+#include "game_tools.h"
 
 /* **************************************************************** */
 struct Env_t
@@ -406,7 +406,8 @@ void TopButtonsActions(game g, SDL_Point *mouse, SDL_Rect *game_grid, SDL_Rect *
 {
   if (mouse->x >= game_grid->x && mouse->x < game_grid->x + top_buttons_rect->w)
     game_undo(g);
-  else if (mouse->x >= (game_grid->x + game_grid->w) / 2 && mouse->x < ((game_grid->x + game_grid->w) / 2) + top_buttons_rect->w)
+  else if (mouse->x >= (game_grid->x + game_grid->w) / 2 &&
+           mouse->x < ((game_grid->x + game_grid->w) / 2) + top_buttons_rect->w)
     game_restart(g);
   else if (mouse->x >= game_grid->x + game_grid->w - top_buttons_rect->w && mouse->x < game_grid->x + game_grid->w)
     game_redo(g);
@@ -420,7 +421,8 @@ bool BottomButtonsActions(game g, SDL_Point *mouse, SDL_Rect *game_grid, SDL_Rec
     game_save(g, "game_save");
     return false;
   }
-  else if (mouse->x >= (game_grid->x + game_grid->w) / 2 && mouse->x < ((game_grid->x + game_grid->w) / 2) + bottom_buttons_rect->w)
+  else if (mouse->x >= (game_grid->x + game_grid->w) / 2 &&
+           mouse->x < ((game_grid->x + game_grid->w) / 2) + bottom_buttons_rect->w)
   {
     game_solve(g);
     return false;
@@ -472,7 +474,8 @@ bool process(SDL_Window *win, SDL_Event *e, game g)
     j = (mouse.x - game_grid.x) / square.w;
 
     /* if we click inside the grid */
-    if (mouse.y > game_grid.y && mouse.y < game_grid.y + game_grid.h && mouse.x >= game_grid.x && mouse.x < game_grid.x + game_grid.w)
+    if (mouse.y > game_grid.y && mouse.y < game_grid.y + game_grid.h && mouse.x >= game_grid.x &&
+        mouse.x < game_grid.x + game_grid.w)
     {
       if (e->button.button == SDL_BUTTON_LEFT)
       {
