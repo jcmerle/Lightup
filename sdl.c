@@ -55,7 +55,7 @@ void GetGameGridSize(int w, int h, SDL_Rect *game_grid)
 void GetTopButtonSize(SDL_Rect *game_grid, SDL_Rect *top_buttons_rect)
 {
   top_buttons_rect->w = game_grid->w / 6;
-  top_buttons_rect->h = game_grid->y / 1.3;
+  top_buttons_rect->h = game_grid->y / 1.2;
   top_buttons_rect->x = game_grid->x;
   top_buttons_rect->y = (game_grid->y - top_buttons_rect->h) / 2;
 }
@@ -90,6 +90,8 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   PRINT("Press 'r' to restart\n");
   PRINT("Press 'z' to undo\n");
   PRINT("Press 'y' to redo\n");
+  PRINT("Press 's' to solve\n");
+  PRINT("Press 'w' to save\n");
   PRINT("Press ESC or 'q' to quit. Enjoy this simple yet fun game!\n");
 
   /* get current window size */
@@ -502,6 +504,7 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
     if (e->key.keysym.sym == SDLK_y) game_redo(g);
     if (e->key.keysym.sym == SDLK_r) game_restart(g);
     if (e->key.keysym.sym == SDLK_w) game_save(g, "game_save");
+    if (e->key.keysym.sym == SDLK_s) game_solve(g);
   }
   if (game_is_over(g))
   {

@@ -112,6 +112,34 @@ About Const Pointer:
 * See also: <http://www.geeksforgeeks.org/const-qualifier-in-c/>
 * See also this more technical discussion: <http://stackoverflow.com/questions/8504411/typedef-pointer-const-weirdness>
 
+## SDL Version
+
+Our game is based on the popular franchise PacMan. 
+
+To run our game, type in your console :
+```c 
+mkdir build && cd build
+cmake ..
+make
+./game_sdl
+```
+If you don't put any parameters after ./game_sdl it will launch the default game.
+To run a custom game, you need to precise which game you want to run : ./game_sdl "path to the game"
+
+We made a version implementing most functions like game_save, game_load, game_undo, game_redo, game_restart, game_solve, etc.
+
+There are 6 buttons, 3 above and 3 below our grid executing these functions when clicked on. In order : undo, restart, redo, save, solve and quit.
+You can also choose to use the keybinds printed in the console (r,z,y,q,s,w).
+
+![alt text](ressources/game.png)
+
+In case of 2 lightbulbs lighting each other (pacmans), they will turn red. Same for walls that have an error.
+
+
+
+
+
+
 ## Error Policy
 
 There are many different ways to deal with program errors... Concerning the
