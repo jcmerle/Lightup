@@ -57,12 +57,12 @@ int main(int argc, char *argv[])
     {
       /* process your events */
       quit = process(win, ren, env, &e, g);
-      if (quit){ 
+      if (quit)
+      {
         break;
       }
     }
 
-    
     /* background in black */
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
@@ -71,14 +71,11 @@ int main(int argc, char *argv[])
     render(win, ren, env, g);
     SDL_RenderPresent(ren);
     SDL_Delay(DELAY);
-    
   }
 
   /* clean your environment */
   clean(win, ren, env);
 
-  SDL_DestroyRenderer(ren);
-  SDL_DestroyWindow(win);
   IMG_Quit();
   TTF_Quit();
   SDL_Quit();

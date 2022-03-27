@@ -36,6 +36,72 @@ struct Env_t
 };
 
 /* **************************************************************** */
+void GetGameGridSize(int w, int h, SDL_Rect *game_grid)
+{
+  game_grid->x = w / 10;
+  game_grid->y = h / 10;
+  game_grid->w = w - (2 * game_grid->x);
+  game_grid->h = h - (2 * game_grid->y);
+}
+
+/* **************************************************************** */
+
+void GetTopButtonSize(SDL_Rect *game_grid, SDL_Rect *top_buttons_rect)
+{
+  top_buttons_rect->w = game_grid->w / 6;
+  top_buttons_rect->h = game_grid->y / 2;
+  top_buttons_rect->x = game_grid->x;
+  top_buttons_rect->y = (game_grid->y - top_buttons_rect->h) / 2;
+}
+
+/* **************************************************************** */
+
+void GetBottomButtonSize(SDL_Rect *game_grid, SDL_Rect *top_buttons_rect, SDL_Rect *bottom_buttons_rect)
+{
+  bottom_buttons_rect->w = top_buttons_rect->w;
+  bottom_buttons_rect->h = top_buttons_rect->h;
+  bottom_buttons_rect->x = game_grid->x;
+  bottom_buttons_rect->y = game_grid->y + game_grid->h + top_buttons_rect->y;
+}
+
+/* **************************************************************** */
+
+void GetSquareSize(game g, SDL_Rect *game_grid, SDL_Rect *square)
+{
+  square->x = game_grid->x;
+  square->y = game_grid->y;
+  square->w = game_grid->w / game_nb_cols(g);
+  square->h = game_grid->h / game_nb_rows(g);
+}
+
+/* **************************************************************** */
+
+void LeftClickActions(game g, uint i, uint j)
+{
+  if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
+  {
+    game_play_move(g, i, j, S_LIGHTBULB);
+  }
+  else if (game_check_move(g, i, j, S_BLANK))
+  {
+    game_play_move(g, i, j, S_BLANK);
+  }
+}
+
+/* **************************************************************** */
+
+void RightClickActions(game g, uint i, uint j)
+{
+  if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK))
+  {
+    game_play_move(g, i, j, S_MARK);
+  }
+  else if (game_check_move(g, i, j, S_BLANK))
+  {
+    game_play_move(g, i, j, S_BLANK);
+  }
+}
+/* **************************************************************** */
 
 Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
 {
@@ -130,7 +196,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
-  SDL_Rect arrow_rect;
+  SDL_Rect top_buttons_rect;
   SDL_Rect bottom_buttons_rect;
   SDL_Rect sq_aux;
 
@@ -143,29 +209,23 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   SDL_GetWindowSize(win, &w, &h);
 
   /* get scaling and size of the grid to be centered */
-  game_grid.x = w / 10;
-  game_grid.y = h / 10;
-  game_grid.w = w - (2 * game_grid.x);
-  game_grid.h = h - (2 * game_grid.y);
+  GetGameGridSize(w, h, &game_grid);
 
-  /* get scaling and size of the arrows on top of the grid*/
-  arrow_rect.w = game_grid.w / 6;
-  arrow_rect.h = game_grid.y / 2;
-  arrow_rect.x = game_grid.x;
-  arrow_rect.y = (game_grid.y - arrow_rect.h) / 2;
-
-  /* display the menu at the top of the grid */
-  SDL_RenderCopy(ren, env->back_arrow, NULL, &arrow_rect);
-  arrow_rect.x = (game_grid.x + game_grid.w) / 2;
-  SDL_RenderCopy(ren, env->repeat_arrow, NULL, &arrow_rect);
-  arrow_rect.x = (game_grid.x + game_grid.w) - arrow_rect.w;
-  SDL_RenderCopy(ren, env->forward_arrow, NULL, &arrow_rect);
+  /* get scaling and size of the buttons at top of the grid*/
+  GetTopButtonSize(&game_grid, &top_buttons_rect);
 
   /* get scaling and size of the buttons at the bottom of the grid*/
-  bottom_buttons_rect.w = arrow_rect.w;
-  bottom_buttons_rect.h = arrow_rect.h;
-  bottom_buttons_rect.x = game_grid.x;
-  bottom_buttons_rect.y = game_grid.y + game_grid.h + arrow_rect.y;
+  GetBottomButtonSize(&game_grid, &top_buttons_rect, &bottom_buttons_rect);
+
+  /* get size of a square depending of the window's size */
+  GetSquareSize(g, &game_grid, &square);
+
+  /* display the menu at the top of the grid */
+  SDL_RenderCopy(ren, env->back_arrow, NULL, &top_buttons_rect);
+  top_buttons_rect.x = (game_grid.x + game_grid.w) / 2;
+  SDL_RenderCopy(ren, env->repeat_arrow, NULL, &top_buttons_rect);
+  top_buttons_rect.x = (game_grid.x + game_grid.w) - top_buttons_rect.w;
+  SDL_RenderCopy(ren, env->forward_arrow, NULL, &top_buttons_rect);
 
   /* display the menu at the bottom of the grid */
   SDL_RenderCopy(ren, env->save_button, NULL, &bottom_buttons_rect);
@@ -174,18 +234,26 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   bottom_buttons_rect.x = (game_grid.x + game_grid.w) - bottom_buttons_rect.w;
   SDL_RenderCopy(ren, env->quit_button, NULL, &bottom_buttons_rect);
 
-  /* get size of a square depending of the window's size */
-  SDL_QueryTexture(env->pacman, NULL, NULL, NULL, NULL);
-  square.w = game_grid.w / DEFAULT_SIZE;
-  square.h = game_grid.h / DEFAULT_SIZE;
-
-  for (square.y = game_grid.y; square.y <= game_grid.h + game_grid.y - square.h; square.y += square.h)
+  for (uint case_y = 0; case_y < game_nb_rows(g); case_y += 1, square.y += square.h)
   {
-    for (square.x = game_grid.x; square.x <= game_grid.w + game_grid.x - square.w; square.x += square.w)
+    if (case_y == game_nb_rows(g) - 1)
     {
+      square.h += game_grid.h % game_nb_rows(g);
+    }
 
-      uint i = (square.y - game_grid.y) / square.h;
-      uint j = (square.x - game_grid.x) / square.w;
+    square.x = game_grid.x;
+    square.w = game_grid.w / game_nb_cols(g);
+    square.h = game_grid.h / game_nb_rows(g);
+
+    for (uint case_x = 0; case_x < game_nb_cols(g); case_x += 1, square.x += square.w)
+    {
+      if (case_x == game_nb_cols(g) - 1)
+      {
+        square.w += game_grid.w % game_nb_cols(g);
+      }
+
+      uint i = case_y;
+      uint j = case_x;
       if (game_is_blank(g, i, j))
       {
         if (game_is_lighted(g, i, j))
@@ -263,36 +331,22 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
   SDL_Rect rect;
   SDL_Rect game_grid;
   SDL_Rect square;
-  SDL_Rect arrow_rect;
+  SDL_Rect top_buttons_rect;
   SDL_Rect bottom_buttons_rect;
-
+  /* get current window size */
   SDL_GetWindowSize(win, &w, &h);
 
   /* get scaling and size of the grid to be centered */
-  game_grid.x = w / 10;
-  game_grid.y = h / 10;
-  game_grid.w = w - (2 * game_grid.x);
-  game_grid.h = h - (2 * game_grid.y);
+  GetGameGridSize(w, h, &game_grid);
 
-  arrow_rect.y = game_grid.y / 10;
-  arrow_rect.x = w / 6;
-  arrow_rect.w = (w - arrow_rect.x) / 6;
-  arrow_rect.h = h / 20;
-
-  square.w = game_grid.w / game_nb_cols(g);
-  square.h = game_grid.h / game_nb_rows(g);
-
-  /* get padding and size of the arrows on top of the grid*/
-  arrow_rect.w = game_grid.w / 6;
-  arrow_rect.h = game_grid.y / 2;
-  arrow_rect.x = game_grid.x;
-  arrow_rect.y = (game_grid.y - arrow_rect.h) / 2;
+  /* get scaling and size of the buttons at top of the grid*/
+  GetTopButtonSize(&game_grid, &top_buttons_rect);
 
   /* get scaling and size of the buttons at the bottom of the grid*/
-  bottom_buttons_rect.w = arrow_rect.w;
-  bottom_buttons_rect.h = arrow_rect.h;
-  bottom_buttons_rect.x = game_grid.x;
-  bottom_buttons_rect.y = game_grid.y + game_grid.h + arrow_rect.y;
+  GetBottomButtonSize(&game_grid, &top_buttons_rect, &bottom_buttons_rect);
+
+  /* get size of a square depending of the window's size */
+  GetSquareSize(g, &game_grid, &square);
 
   if (e->type == SDL_QUIT)
   {
@@ -311,47 +365,33 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
     {
       if (e->button.button == SDL_BUTTON_LEFT)
       {
-        if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
-        {
-          game_play_move(g, i, j, S_LIGHTBULB);
-        }
-        else if (game_check_move(g, i, j, S_BLANK))
-        {
-          game_play_move(g, i, j, S_BLANK);
-        }
+        LeftClickActions(g, i, j);
       }
       else if (e->button.button == SDL_BUTTON_RIGHT)
       {
-        if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK))
-        {
-          game_play_move(g, i, j, S_MARK);
-        }
-        else if (game_check_move(g, i, j, S_MARK))
-        {
-          game_play_move(g, i, j, S_BLANK);
-        }
+        void RightClickActions(g, i, j);
       }
     }
 
     /* else if we click at the top of the grid */
-    else if (mouse.y >= arrow_rect.y && mouse.y < game_grid.y - arrow_rect.y)
+    else if (mouse.y >= top_buttons_rect.y && mouse.y < game_grid.y - top_buttons_rect.y)
     {
-      if (mouse.x >= game_grid.x && mouse.x < game_grid.x + arrow_rect.w)
+      if (mouse.x >= game_grid.x && mouse.x < game_grid.x + top_buttons_rect.w)
         game_undo(g);
-      else if (mouse.x >= (game_grid.x + game_grid.w) / 2 && mouse.x < ((game_grid.x + game_grid.w) / 2) + arrow_rect.w)
+      else if (mouse.x >= (game_grid.x + game_grid.w) / 2 && mouse.x < ((game_grid.x + game_grid.w) / 2) + top_buttons_rect.w)
         game_restart(g);
-      else if (mouse.x >= game_grid.x + game_grid.w - arrow_rect.w && mouse.x < game_grid.x + game_grid.w)
+      else if (mouse.x >= game_grid.x + game_grid.w - top_buttons_rect.w && mouse.x < game_grid.x + game_grid.w)
         game_redo(g);
     }
 
     /* else if we click at the bottom of the grid */
     else if (mouse.y > bottom_buttons_rect.y && mouse.y < bottom_buttons_rect.y + bottom_buttons_rect.h)
     {
-      if (mouse.x >= game_grid.x && mouse.x < game_grid.x + arrow_rect.w)
+      if (mouse.x >= game_grid.x && mouse.x < game_grid.x + top_buttons_rect.w)
         game_save(g, "game_save");
-      else if (mouse.x >= (game_grid.x + game_grid.w) / 2 && mouse.x < ((game_grid.x + game_grid.w) / 2) + arrow_rect.w)
+      else if (mouse.x >= (game_grid.x + game_grid.w) / 2 && mouse.x < ((game_grid.x + game_grid.w) / 2) + top_buttons_rect.w)
         game_solve(g);
-      else if (mouse.x >= game_grid.x + game_grid.w - arrow_rect.w && mouse.x < game_grid.x + game_grid.w)
+      else if (mouse.x >= game_grid.x + game_grid.w - top_buttons_rect.w && mouse.x < game_grid.x + game_grid.w)
         return true; // We quit the game
     }
   }
@@ -373,6 +413,9 @@ void clean(SDL_Window *win, SDL_Renderer *ren, Env *env)
   SDL_DestroyTexture(env->back_arrow);
   SDL_DestroyTexture(env->forward_arrow);
   SDL_DestroyTexture(env->repeat_arrow);
+  SDL_DestroyTexture(env->save_button);
+  SDL_DestroyTexture(env->solve_button);
+  SDL_DestroyTexture(env->quit_button);
   SDL_DestroyTexture(env->number0);
   SDL_DestroyTexture(env->number1);
   SDL_DestroyTexture(env->number2);
@@ -380,6 +423,9 @@ void clean(SDL_Window *win, SDL_Renderer *ren, Env *env)
   SDL_DestroyTexture(env->number4);
 
   free(env);
+
+  SDL_DestroyRenderer(ren);
+  SDL_DestroyWindow(win);
 }
 
 /* **************************************************************** */
