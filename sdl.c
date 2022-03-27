@@ -527,7 +527,9 @@ bool process(SDL_Window *win, SDL_Event *e, game g)
 void clean(SDL_Window *win, SDL_Renderer *ren, Env *env)
 {
   SDL_DestroyTexture(env->pacman);
+  SDL_DestroyTexture(env->pacmanred);
   SDL_DestroyTexture(env->dot);
+  SDL_DestroyTexture(env->marked);
   SDL_DestroyTexture(env->back_arrow);
   SDL_DestroyTexture(env->forward_arrow);
   SDL_DestroyTexture(env->repeat_arrow);
@@ -539,6 +541,12 @@ void clean(SDL_Window *win, SDL_Renderer *ren, Env *env)
   SDL_DestroyTexture(env->number2);
   SDL_DestroyTexture(env->number3);
   SDL_DestroyTexture(env->number4);
+  SDL_DestroyTexture(env->red0);
+  SDL_DestroyTexture(env->red1);
+  SDL_DestroyTexture(env->red2);
+  SDL_DestroyTexture(env->red3);
+  SDL_DestroyTexture(env->red4);
+  SDL_DestroyTexture(env->text);
 
   free(env);
 
