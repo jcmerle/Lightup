@@ -3,15 +3,14 @@
 #include <SDL.h>
 #include <SDL_image.h> // required to load transparent texture from PNG
 #include <SDL_ttf.h>   // required to use TTF fonts
-
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <assert.h>
 
-#include "sdl.h"
 #include "game.h"
 #include "game_aux.h"
 #include "game_tools.h"
+#include "sdl.h"
 
 /* **************************************************************** */
 
@@ -26,13 +25,11 @@ int main(int argc, char *argv[])
     ERROR("Error: TTF_Init (%s)", SDL_GetError());
 
   /* create window and renderer */
-  SDL_Window *win = SDL_CreateWindow(
-      APP_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-      SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+  SDL_Window *win = SDL_CreateWindow(APP_NAME, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+                                     SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
   if (!win)
     ERROR("Error: SDL_CreateWindow (%s)", SDL_GetError());
-  SDL_Renderer *ren = SDL_CreateRenderer(
-      win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!ren)
     ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_SOFTWARE);
   if (!ren)

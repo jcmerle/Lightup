@@ -25,8 +25,7 @@ int test_new(void)
   game g = game_new(default_squares);
   bool test0 = check_game(g, default_squares);
   game_delete(g);
-  if (test0)
-    return EXIT_SUCCESS;
+  if (test0) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -38,8 +37,7 @@ int test_new_empty(void)
   bool test0 = check_game(g, NULL);
   game_delete(g);
 
-  if (test0)
-    return EXIT_SUCCESS;
+  if (test0) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -75,8 +73,7 @@ int test_copy(void)
   game_delete(g7);
   game_delete(g8);
 
-  if (test0 && test1 && test2 && test3)
-    return EXIT_SUCCESS;
+  if (test0 && test1 && test2 && test3) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -102,8 +99,7 @@ int test_equal(void)
   game_delete(g3);
   game_delete(g4);
 
-  if (test1 && test2 && test3)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -112,7 +108,7 @@ int test_equal(void)
 int test_delete(void)
 {
   game g = game_new_empty();
-  game_delete(g); // nothing else to do...
+  game_delete(g);  // nothing else to do...
   return EXIT_SUCCESS;
 }
 
@@ -122,7 +118,7 @@ int test_set_square(void)
 {
   game g = game_default();
   game_set_square(g, 0, 0, S_LIGHTBULB);
-  game_set_square(g, 0, 2, S_BLANK); // overwrite wall
+  game_set_square(g, 0, 2, S_BLANK);  // overwrite wall
   game_set_square(g, 1, 1, S_MARK);
   game_set_square(g, 2, 2, S_BLACK3 | F_ERROR);
   game_set_square(g, 3, 3, S_LIGHTBULB | F_LIGHTED | F_ERROR);
@@ -139,8 +135,7 @@ int test_set_square(void)
   bool test5 = (s5 == (S_LIGHTBULB | F_LIGHTED | F_ERROR));
   bool test6 = (s6 == S_BLANK);
   game_delete(g);
-  if (test1 && test2 && test3 && test4 && test5 && test6)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4 && test5 && test6) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -160,8 +155,7 @@ int test_get_square(void)
   bool test4 = (s4 == (S_BLACK2 | F_ERROR));
   bool test5 = (s5 == S_MARK);
   game_delete(g);
-  if (test1 && test2 && test3 && test4 && test5)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4 && test5) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -179,8 +173,7 @@ int test_get_state(void)
   bool test3 = (s3 == S_BLACK1);
   bool test4 = (s4 == S_BLACK2);
   game_delete(g);
-  if (test1 && test2 && test3 && test4)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -198,8 +191,7 @@ int test_get_flags(void)
   bool test3 = (s3 == 0);
   bool test4 = (s4 == F_ERROR);
   game_delete(g);
-  if (test1 && test2 && test3 && test4)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -212,12 +204,11 @@ int test_is_state(void)
   bool test2 = game_is_black(g, 0, 2) && game_is_black(g, 2, 5) && !game_is_black(g, 0, 1);
   bool test3 = game_is_blank(g, 0, 1) && !game_is_blank(g, 0, 0);
   bool test4 = game_is_marked(g, 6, 6) && !game_is_marked(g, 0, 0);
-  bool test5 = (game_get_black_number(g, 0, 2) == 1) && //
-               (game_get_black_number(g, 2, 6) == 2) && //
+  bool test5 = (game_get_black_number(g, 0, 2) == 1) &&  //
+               (game_get_black_number(g, 2, 6) == 2) &&  //
                (game_get_black_number(g, 2, 5) == -1);
   game_delete(g);
-  if (test1 && test2 && test3 && test4 && test5)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4 && test5) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -229,8 +220,7 @@ int test_has_flag(void)
   bool test1 = (game_is_lighted(g, 0, 0) && game_is_lighted(g, 0, 1) && !game_is_lighted(g, 1, 1));
   bool test2 = (game_has_error(g, 0, 0) && game_has_error(g, 2, 6) && !game_has_error(g, 0, 1));
   game_delete(g);
-  if (test1 && test2)
-    return EXIT_SUCCESS;
+  if (test1 && test2) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -263,8 +253,7 @@ int test_play_move(void)
   bool test1 = check_game(g1, solution_squares);
   game_delete(g1);
 
-  if (test0 && test1)
-    return EXIT_SUCCESS;
+  if (test0 && test1) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -280,26 +269,25 @@ int test_check_move(void)
   game g0 = game_new(other_squares);
 
   // some legal moves
-  bool test0 = game_check_move(g0, 1, 1, S_LIGHTBULB) && //
-               game_check_move(g0, 0, 0, S_BLANK) &&     //
+  bool test0 = game_check_move(g0, 1, 1, S_LIGHTBULB) &&  //
+               game_check_move(g0, 0, 0, S_BLANK) &&      //
                game_check_move(g0, 1, 1, S_MARK);
 
   // no flags
-  bool test1 = !game_check_move(g0, 1, 1, S_LIGHTBULB | F_LIGHTED | F_ERROR) && //
-               !game_check_move(g0, 0, 0, S_BLANK | F_LIGHTED) &&               //
+  bool test1 = !game_check_move(g0, 1, 1, S_LIGHTBULB | F_LIGHTED | F_ERROR) &&  //
+               !game_check_move(g0, 0, 0, S_BLANK | F_LIGHTED) &&                //
                !game_check_move(g0, 1, 1, S_MARK | F_ERROR);
 
   // try to overwrite black wall
-  bool test2 = !game_check_move(g0, 0, 2, S_LIGHTBULB) && //
+  bool test2 = !game_check_move(g0, 0, 2, S_LIGHTBULB) &&  //
                !game_check_move(g0, 2, 5, S_BLANK);
 
   // invalid coordinates
-  bool test3 = !game_check_move(g0, 7, 7, S_LIGHTBULB) && //
+  bool test3 = !game_check_move(g0, 7, 7, S_LIGHTBULB) &&  //
                !game_check_move(g0, 0, 10, S_BLANK);
 
   game_delete(g0);
-  if (test0 && test1 && test2 && test3)
-    return EXIT_SUCCESS;
+  if (test0 && test1 && test2 && test3) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -335,13 +323,11 @@ int test_is_over(void)
   game g4 = game_default();
   for (uint i = 0; i < DEFAULT_SIZE; i++)
     for (uint j = 0; j < DEFAULT_SIZE; j++)
-      if (!game_is_black(g4, i, j))
-        game_play_move(g4, i, j, S_LIGHTBULB);
+      if (!game_is_black(g4, i, j)) game_play_move(g4, i, j, S_LIGHTBULB);
   bool test5 = (game_is_over(g4) == false);
   game_delete(g4);
 
-  if (test1 && test2 && test3 && test4 && test5)
-    return EXIT_SUCCESS;
+  if (test1 && test2 && test3 && test4 && test5) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -361,8 +347,7 @@ int test_restart(void)
   bool test2 = check_game(g2, default_squares);
   game_delete(g2);
 
-  if (test1 && test2)
-    return EXIT_SUCCESS;
+  if (test1 && test2) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -397,8 +382,7 @@ int test_update_flags(void)
   bool test1 = check_game(g1, solution_squares);
   game_delete(g1);
 
-  if (test0 && test1)
-    return EXIT_SUCCESS;
+  if (test0 && test1) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 

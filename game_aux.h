@@ -38,4 +38,4 @@ game game_default(void);
  **/
 game game_default_solution(void);
 
-#endif // __GAME_AUX_H__
+#endif  // __GAME_AUX_H__

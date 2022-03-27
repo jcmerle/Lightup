@@ -32,4 +32,4 @@ extern square sol_3x3w_squares[];
 extern square ext_2x2w_squares[];
 extern square sol_2x2w_squares[];
 
-#endif // __GAME_EXAMPLES_H__
+#endif  // __GAME_EXAMPLES_H__
