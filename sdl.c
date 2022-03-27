@@ -19,7 +19,10 @@
 struct Env_t
 {
   SDL_Texture *pacman;
+  SDL_Texture *pacmanred;
   SDL_Texture *dot;
+  SDL_Texture *cross;
+  SDL_Texture *marked;
   SDL_Texture *back_arrow;
   SDL_Texture *forward_arrow;
   SDL_Texture *repeat_arrow;
@@ -32,7 +35,6 @@ struct Env_t
   SDL_Texture *number3;
   SDL_Texture *number4;
   SDL_Texture *text;
-  SDL_Texture *text_r;
 };
 
 /* **************************************************************** */
@@ -59,11 +61,26 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   env->pacman = IMG_LoadTexture(ren, PACMAN);
   if (!env->pacman)
     ERROR("IMG_LoadTexture: %s\n", PACMAN);
+  
+  /* init pacmanred texture from PNG image */
+  env->pacmanred = IMG_LoadTexture(ren, PACMANRED);
+  if (!env->pacmanred)
+    ERROR("IMG_LoadTexture: %s\n", PACMANRED);
 
   /* init dot texture from PNG image */
   env->dot = IMG_LoadTexture(ren, DOT);
   if (!env->dot)
     ERROR("IMG_LoadTexture: %s\n", DOT);
+
+  /* init cross texture from PNG image */
+  env->cross = IMG_LoadTexture(ren, CROSS);
+  if (!env->cross)
+    ERROR("IMG_LoadTexture: %s\n", CROSS);
+  
+  /* init marked texture from PNG image */
+  env->marked = IMG_LoadTexture(ren, MARKED);
+  if (!env->marked)
+    ERROR("IMG_LoadTexture: %s\n", MARKED);
 
   /* init back arrow texture from PNG image */
   env->back_arrow = IMG_LoadTexture(ren, BACK_ARROW);
@@ -205,7 +222,11 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
       else if (game_is_marked(g, i, j))
       {
-        // SDL_RenderCopy(ren, env->???, NULL, &square);
+        sq_aux.x = square.x + game_grid.x / 7;
+        sq_aux.y = square.y + game_grid.y / 7;
+        sq_aux.w = square.w / 1.3;
+        sq_aux.h = square.h / 1.3;
+        SDL_RenderCopy(ren, env->marked, NULL, &sq_aux);
       }
 
       else if (game_is_lightbulb(g, i, j))
@@ -234,6 +255,13 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
             SDL_RenderCopy(ren, env->number3, NULL, &sq_aux);
           if (black_number == 4)
             SDL_RenderCopy(ren, env->number4, NULL, &sq_aux);
+        }
+      }
+      if(game_has_error(g,i,j)){
+        if(game_is_black(g,i,j)){
+          SDL_RenderCopy(ren, env->cross, NULL, &square);
+        } else {
+          SDL_RenderCopy(ren, env->pacmanred, NULL, &square);
         }
       }
     }
@@ -311,7 +339,7 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
     {
       if (e->button.button == SDL_BUTTON_LEFT)
       {
-        if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
+        if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB) && !game_is_marked(g,i,j))
         {
           game_play_move(g, i, j, S_LIGHTBULB);
         }
@@ -322,11 +350,11 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
       }
       else if (e->button.button == SDL_BUTTON_RIGHT)
       {
-        if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK))
+        if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK) && !game_is_lightbulb(g,i,j))
         {
           game_play_move(g, i, j, S_MARK);
         }
-        else if (game_check_move(g, i, j, S_MARK))
+        else if (game_check_move(g, i, j, S_BLANK))
         {
           game_play_move(g, i, j, S_BLANK);
         }

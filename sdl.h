@@ -49,7 +49,10 @@ typedef struct Env_t Env;
 /* **************************************************************** */
 
 #define PACMAN "pacman.png"
+#define PACMANRED "pacmanred.png"
 #define DOT "dot.png"
+#define CROSS "cross.png"
+#define MARKED "marked.png"
 #define BACK_ARROW "back_arrow.bmp"
 #define FORWARD_ARROW "forward_arrow.bmp"
 #define REPEAT_ARROW "repeat_arrow.bmp"
