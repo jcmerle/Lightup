@@ -4,8 +4,8 @@
 #define MODEL_H
 
 #include <SDL.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "game.h"
 
@@ -15,25 +15,21 @@ typedef struct Env_t Env;
 
 #ifdef __ANDROID__
 #define PRINT(STR, ...)          \
-  do                             \
-  {                              \
+  do {                           \
     SDL_Log(STR, ##__VA_ARGS__); \
   } while (0)
 #define ERROR(STR, ...)          \
-  do                             \
-  {                              \
+  do {                           \
     SDL_Log(STR, ##__VA_ARGS__); \
     exit(EXIT_FAILURE);          \
   } while (0)
 #else
 #define PRINT(STR, ...)         \
-  do                            \
-  {                             \
+  do {                          \
     printf(STR, ##__VA_ARGS__); \
   } while (0)
 #define ERROR(STR, ...)                  \
-  do                                     \
-  {                                      \
+  do {                                   \
     fprintf(stderr, STR, ##__VA_ARGS__); \
     exit(EXIT_FAILURE);                  \
   } while (0)
@@ -72,10 +68,10 @@ typedef struct Env_t Env;
 
 /* **************************************************************** */
 
-Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[]);
-void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g);
-void clean(SDL_Window *win, SDL_Renderer *ren, Env *env);
-bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g);
+Env* init(SDL_Window* win, SDL_Renderer* ren, int argc, char* argv[]);
+void render(SDL_Window* win, SDL_Renderer* ren, Env* env, game g);
+void clean(SDL_Window* win, SDL_Renderer* ren, Env* env);
+bool process(SDL_Window* win, SDL_Renderer* ren, Env* env, SDL_Event* e, game g);
 
 /* **************************************************************** */
 
