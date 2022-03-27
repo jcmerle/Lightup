@@ -80,7 +80,7 @@ void GetSquareSize(game g, SDL_Rect *game_grid, SDL_Rect *square)
 
 void LeftClickActions(game g, uint i, uint j)
 {
-  if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
+  if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB) && !game_is_marked(g,i,j))
   {
     game_play_move(g, i, j, S_LIGHTBULB);
   }
@@ -94,7 +94,7 @@ void LeftClickActions(game g, uint i, uint j)
 
 void RightClickActions(game g, uint i, uint j)
 {
-  if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK))
+  if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK) && !game_is_lightbulb(g,i,j))
   {
     game_play_move(g, i, j, S_MARK);
   }
@@ -401,7 +401,7 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
       }
       else if (e->button.button == SDL_BUTTON_RIGHT)
       {
-        void RightClickActions(g, i, j);
+        RightClickActions(g, i, j);
       }
     }
 
