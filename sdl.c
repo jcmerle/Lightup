@@ -78,33 +78,6 @@ void GetSquareSize(game g, SDL_Rect *game_grid, SDL_Rect *square)
 
 /* **************************************************************** */
 
-void LeftClickActions(game g, uint i, uint j)
-{
-  if (!game_is_lightbulb(g, i, j) && game_check_move(g, i, j, S_LIGHTBULB))
-  {
-    game_play_move(g, i, j, S_LIGHTBULB);
-  }
-  else if (game_check_move(g, i, j, S_BLANK))
-  {
-    game_play_move(g, i, j, S_BLANK);
-  }
-}
-
-/* **************************************************************** */
-
-void RightClickActions(game g, uint i, uint j)
-{
-  if (!game_is_marked(g, i, j) && game_check_move(g, i, j, S_MARK))
-  {
-    game_play_move(g, i, j, S_MARK);
-  }
-  else if (game_check_move(g, i, j, S_BLANK))
-  {
-    game_play_move(g, i, j, S_BLANK);
-  }
-}
-/* **************************************************************** */
-
 Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
 {
   Env *env = malloc(sizeof(struct Env_t));
@@ -251,26 +224,24 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
   bottom_buttons_rect.x = (game_grid.x + game_grid.w) - bottom_buttons_rect.w;
   SDL_RenderCopy(ren, env->quit_button, NULL, &bottom_buttons_rect);
 
-  for (uint case_y = 0; case_y < game_nb_rows(g); case_y += 1, square.y += square.h)
+  for (uint i = 0; i < game_nb_rows(g); i += 1, square.y += square.h)
   {
-    if (case_y == game_nb_rows(g) - 1)
-    {
-      square.h += game_grid.h % game_nb_rows(g);
-    }
-
     square.x = game_grid.x;
     square.w = game_grid.w / game_nb_cols(g);
     square.h = game_grid.h / game_nb_rows(g);
 
-    for (uint case_x = 0; case_x < game_nb_cols(g); case_x += 1, square.x += square.w)
+    if (i == game_nb_rows(g) - 1)
     {
-      if (case_x == game_nb_cols(g) - 1)
+      square.h += game_grid.h % game_nb_rows(g);
+    }
+
+    for (uint j = 0; j < game_nb_cols(g); j += 1, square.x += square.w)
+    {
+      if (j == game_nb_cols(g) - 1)
       {
         square.w += game_grid.w % game_nb_cols(g);
       }
 
-      uint i = case_y;
-      uint j = case_x;
       if (game_is_blank(g, i, j))
       {
         if (game_is_lighted(g, i, j))
@@ -355,6 +326,79 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
 /* **************************************************************** */
 
+void LeftClickActions(game g, uint i, uint j)
+{
+  /* We make sure the coordinates are valid */
+  if (i >= game_nb_rows(g))
+    i = game_nb_rows(g) - 1;
+  if (j >= game_nb_cols(g))
+    j = game_nb_cols(g) - 1;
+
+  if (game_check_move(g, i, j, S_LIGHTBULB) && !game_is_lightbulb(g, i, j))
+  {
+    game_play_move(g, i, j, S_LIGHTBULB);
+  }
+  else if (game_check_move(g, i, j, S_BLANK))
+  {
+    game_play_move(g, i, j, S_BLANK);
+  }
+}
+
+/* **************************************************************** */
+
+void RightClickActions(game g, uint i, uint j)
+{
+  /* We make sure the coordinates are valid */
+  if (i >= game_nb_rows(g))
+    i = game_nb_rows(g) - 1;
+  if (j >= game_nb_cols(g))
+    j = game_nb_cols(g) - 1;
+
+  if (game_check_move(g, i, j, S_MARK) && !game_is_marked(g, i, j))
+  {
+    game_play_move(g, i, j, S_MARK);
+  }
+  else if (game_check_move(g, i, j, S_BLANK))
+  {
+    game_play_move(g, i, j, S_BLANK);
+  }
+}
+
+/* **************************************************************** */
+
+void TopButtonsActions(game g, SDL_Point *mouse, SDL_Rect *game_grid, SDL_Rect *top_buttons_rect)
+{
+  if (mouse->x >= game_grid->x && mouse->x < game_grid->x + top_buttons_rect->w)
+    game_undo(g);
+  else if (mouse->x >= (game_grid->x + game_grid->w) / 2 && mouse->x < ((game_grid->x + game_grid->w) / 2) + top_buttons_rect->w)
+    game_restart(g);
+  else if (mouse->x >= game_grid->x + game_grid->w - top_buttons_rect->w && mouse->x < game_grid->x + game_grid->w)
+    game_redo(g);
+}
+/* **************************************************************** */
+
+bool BottomButtonsActions(game g, SDL_Point *mouse, SDL_Rect *game_grid, SDL_Rect *bottom_buttons_rect)
+{
+  if (mouse->x >= game_grid->x && mouse->x < game_grid->x + bottom_buttons_rect->w)
+  {
+    game_save(g, "game_save");
+    return false;
+  }
+  else if (mouse->x >= (game_grid->x + game_grid->w) / 2 && mouse->x < ((game_grid->x + game_grid->w) / 2) + bottom_buttons_rect->w)
+  {
+    game_solve(g);
+    return false;
+  }
+  else if (mouse->x >= game_grid->x + game_grid->w - bottom_buttons_rect->w && mouse->x < game_grid->x + game_grid->w)
+    return true; // We quit the game
+
+  else
+  {
+    return false;
+  }
+}
+/* **************************************************************** */
+
 bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
 {
   int w, h;
@@ -401,30 +445,21 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
       }
       else if (e->button.button == SDL_BUTTON_RIGHT)
       {
-        void RightClickActions(g, i, j);
+        RightClickActions(g, i, j);
       }
     }
 
     /* else if we click at the top of the grid */
     else if (mouse.y >= top_buttons_rect.y && mouse.y < game_grid.y - top_buttons_rect.y)
     {
-      if (mouse.x >= game_grid.x && mouse.x < game_grid.x + top_buttons_rect.w)
-        game_undo(g);
-      else if (mouse.x >= (game_grid.x + game_grid.w) / 2 && mouse.x < ((game_grid.x + game_grid.w) / 2) + top_buttons_rect.w)
-        game_restart(g);
-      else if (mouse.x >= game_grid.x + game_grid.w - top_buttons_rect.w && mouse.x < game_grid.x + game_grid.w)
-        game_redo(g);
+      TopButtonsActions(g, &mouse, &game_grid, &top_buttons_rect);
     }
 
     /* else if we click at the bottom of the grid */
     else if (mouse.y > bottom_buttons_rect.y && mouse.y < bottom_buttons_rect.y + bottom_buttons_rect.h)
     {
-      if (mouse.x >= game_grid.x && mouse.x < game_grid.x + top_buttons_rect.w)
-        game_save(g, "game_save");
-      else if (mouse.x >= (game_grid.x + game_grid.w) / 2 && mouse.x < ((game_grid.x + game_grid.w) / 2) + top_buttons_rect.w)
-        game_solve(g);
-      else if (mouse.x >= game_grid.x + game_grid.w - top_buttons_rect.w && mouse.x < game_grid.x + game_grid.w)
-        return true; // We quit the game
+      if (BottomButtonsActions(g, &mouse, &game_grid, &bottom_buttons_rect))
+        return true;
     }
   }
 
