@@ -317,6 +317,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
       {
         if (game_is_lighted(g, i, j))
         {
+          // make case all black when lighted
           SDL_SetRenderDrawColor(ren, 0, 0, 0, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(ren, &square);
         }
@@ -329,12 +330,14 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
       else if (game_is_marked(g, i, j))
       {
+        // when marked shows cherries
         GetSquareMarked(&square, &sq_aux);
         SDL_RenderCopy(ren, env->marked, NULL, &sq_aux);
       }
 
       else if (game_is_lightbulb(g, i, j))
       {
+        // pacman when lightbulb
         SDL_RenderCopy(ren, env->pacman, NULL, &square);
       }
 
@@ -346,6 +349,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
         if (black_number != -1)
         {
           GetSquareNumber(&square, &sq_aux);
+          // shows numbers on top of walls when there is one
           if (black_number == 0)
             SDL_RenderCopy(ren, env->number0, NULL, &sq_aux);
           if (black_number == 1)
@@ -381,6 +385,7 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
         }
         else
         {
+          // shows pacman in red when errors between 2 lightbulbs
           SDL_RenderCopy(ren, env->pacmanred, NULL, &square);
         }
       }
@@ -531,6 +536,7 @@ bool process(SDL_Window *win, SDL_Event *e, game g)
   }
   else if (e->type == SDL_KEYDOWN)
   {
+    // when SDLK_key is pressed, execute one function
     if (e->key.keysym.sym == SDLK_ESCAPE || e->key.keysym.sym == SDLK_q)
       return true;
     if (e->key.keysym.sym == SDLK_z)
