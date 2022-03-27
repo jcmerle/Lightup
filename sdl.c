@@ -21,7 +21,6 @@ struct Env_t
   SDL_Texture *pacman;
   SDL_Texture *pacmanred;
   SDL_Texture *dot;
-  SDL_Texture *cross;
   SDL_Texture *marked;
   SDL_Texture *back_arrow;
   SDL_Texture *forward_arrow;
@@ -34,6 +33,11 @@ struct Env_t
   SDL_Texture *number2;
   SDL_Texture *number3;
   SDL_Texture *number4;
+  SDL_Texture *red0;
+  SDL_Texture *red1;
+  SDL_Texture *red2;
+  SDL_Texture *red3;
+  SDL_Texture *red4;
   SDL_Texture *text;
 };
 
@@ -51,7 +55,7 @@ void GetGameGridSize(int w, int h, SDL_Rect *game_grid)
 void GetTopButtonSize(SDL_Rect *game_grid, SDL_Rect *top_buttons_rect)
 {
   top_buttons_rect->w = game_grid->w / 6;
-  top_buttons_rect->h = game_grid->y / 2;
+  top_buttons_rect->h = game_grid->y / 1.3;
   top_buttons_rect->x = game_grid->x;
   top_buttons_rect->y = (game_grid->y - top_buttons_rect->h) / 2;
 }
@@ -82,6 +86,12 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
 {
   Env *env = malloc(sizeof(struct Env_t));
 
+  PRINT("Welcome to Light up!\n");
+  PRINT("Press 'r' to restart\n");
+  PRINT("Press 'z' to undo\n");
+  PRINT("Press 'y' to redo\n");
+  PRINT("Press ESC or 'q' to quit. Enjoy this simple yet fun game!\n");
+
   /* get current window size */
   int w, h;
   SDL_GetWindowSize(win, &w, &h);
@@ -110,11 +120,6 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   env->dot = IMG_LoadTexture(ren, DOT);
   if (!env->dot)
     ERROR("IMG_LoadTexture: %s\n", DOT);
-
-  /* init cross texture from PNG image */
-  env->cross = IMG_LoadTexture(ren, CROSS);
-  if (!env->cross)
-    ERROR("IMG_LoadTexture: %s\n", CROSS);
 
   /* init marked texture from PNG image */
   env->marked = IMG_LoadTexture(ren, MARKED);
@@ -176,6 +181,31 @@ Env *init(SDL_Window *win, SDL_Renderer *ren, int argc, char *argv[])
   if (!env->number4)
     ERROR("IMG_LoadTexture: %s\n", NUMBER4);
 
+  /* init number 0 red texture from PNG image */
+  env->red0 = IMG_LoadTexture(ren, RED0);
+  if (!env->red0)
+    ERROR("IMG_LoadTexture: %s\n", RED0);
+
+  /* init number 1 red texture from PNG image */
+  env->red1 = IMG_LoadTexture(ren, RED1);
+  if (!env->red1)
+    ERROR("IMG_LoadTexture: %s\n", RED1);
+  
+  /* init number 2 red texture from PNG image */
+  env->red2 = IMG_LoadTexture(ren, RED2);
+  if (!env->red2)
+    ERROR("IMG_LoadTexture: %s\n", RED2);
+  
+  /* init number 3 red texture from PNG image */
+  env->red3 = IMG_LoadTexture(ren, RED3);
+  if (!env->red3)
+    ERROR("IMG_LoadTexture: %s\n", RED3);
+  
+  /* init number 4 red texture from PNG image */
+  env->red4 = IMG_LoadTexture(ren, RED4);
+  if (!env->red4)
+    ERROR("IMG_LoadTexture: %s\n", RED4);
+
   return env;
 }
 
@@ -192,7 +222,6 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
   /* set some colors */
   SDL_Color blue_color = {25, 75, 240, SDL_ALPHA_OPAQUE};
-  SDL_Color green_color = {40, 175, 60, SDL_ALPHA_OPAQUE};
 
   /* get current window size */
   int w, h;
@@ -300,7 +329,24 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
       {
         if (game_is_black(g, i, j))
         {
-          SDL_RenderCopy(ren, env->cross, NULL, &square);
+          int black_number = game_get_black_number(g, i, j);
+          if (black_number != -1)
+          {
+            sq_aux.x = square.x + game_grid.x / 7;
+            sq_aux.y = square.y + game_grid.y / 7;
+            sq_aux.w = square.w / 1.3;
+            sq_aux.h = square.h / 1.3;
+            if (black_number == 0)
+              SDL_RenderCopy(ren, env->red0, NULL, &sq_aux);
+            if (black_number == 1)
+              SDL_RenderCopy(ren, env->red1, NULL, &sq_aux);
+            if (black_number == 2)
+              SDL_RenderCopy(ren, env->red2, NULL, &sq_aux);
+            if (black_number == 3)
+              SDL_RenderCopy(ren, env->red3, NULL, &sq_aux);
+            if (black_number == 4)
+              SDL_RenderCopy(ren, env->red4, NULL, &sq_aux);
+          }
         }
         else
         {
@@ -450,12 +496,17 @@ bool process(SDL_Window *win, SDL_Renderer *ren, Env *env, SDL_Event *e, game g)
         return true;
     }
   }
-
+  else if (e->type == SDL_KEYDOWN){
+    if (e->key.keysym.sym == SDLK_ESCAPE || e->key.keysym.sym == SDLK_q) return true;
+    if (e->key.keysym.sym == SDLK_z) game_undo(g);
+    if (e->key.keysym.sym == SDLK_y) game_redo(g);
+    if (e->key.keysym.sym == SDLK_r) game_restart(g);
+    if (e->key.keysym.sym == SDLK_w) game_save(g, "game_save");
+  }
   if (game_is_over(g))
   {
     return true;
   }
-
   return false;
 }
 

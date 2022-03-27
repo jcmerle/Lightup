@@ -94,7 +94,7 @@ add_test(test_game_solve ./game_test "game_solve")
 add_test(test_game_nb_solutions ./game_test "game_nb_solutions")
 
 ## copy useful data files in build dir
-foreach(file "ressources/pacman.png" "ressources/pacmanred.png" "ressources/dot.png" "ressources/cross.png" "ressources/marked.png" "ressources/forward_arrow.bmp" "ressources/back_arrow.bmp" "ressources/repeat_arrow.bmp" "ressources/number0.png" "ressources/number1.png" "ressources/number2.png" "ressources/number3.png" "ressources/number4.png" "ressources/pacman.ttf" "ressources/save_button.bmp" "ressources/solve_button.bmp" "ressources/quit_button.bmp")
+foreach(file "ressources/pacman.png" "ressources/pacmanred.png" "ressources/dot.png" "ressources/marked.png" "ressources/forward_arrow.png" "ressources/back_arrow.png" "ressources/repeat_arrow.bmp" "ressources/number0.png" "ressources/number1.png" "ressources/number2.png" "ressources/number3.png" "ressources/number4.png" "ressources/pacman.ttf" "ressources/save_button.bmp" "ressources/solve_button.bmp" "ressources/quit_button.bmp" "ressources/red0.png" "ressources/red1.png" "ressources/red2.png" "ressources/red3.png" "ressources/red4.png")
   file(COPY ${file} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endforeach(data_file)
 #############################  #############################
