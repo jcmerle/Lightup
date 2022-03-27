@@ -32,8 +32,7 @@ int test_game_save(void)
   bool test0 = game_equal(g0, g1);
   game_delete(g0);
   game_delete(g1);
-  if (test0)
-    return EXIT_SUCCESS;
+  if (test0) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -55,8 +54,7 @@ int test_game_load(void)
   bool test0 = game_equal(g0, g1);
   game_delete(g0);
   game_delete(g1);
-  if (test0)
-    return EXIT_SUCCESS;
+  if (test0) return EXIT_SUCCESS;
   return EXIT_FAILURE;
 }
 
@@ -68,8 +66,7 @@ int test_game_solve(void)
   game g = game_load("../examples/game_3x10.txt");
   game_solve(g);
 
-  if (!game_is_over(g))
-  {
+  if (!game_is_over(g)) {
     return EXIT_FAILURE;
   }
 

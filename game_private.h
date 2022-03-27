@@ -30,40 +30,27 @@
  * @brief Game structure.
  * @details This is an opaque data type.
  */
-struct game_s
-{
+struct game_s {
   uint nb_rows;      /**< number of rows in the game */
   uint nb_cols;      /**< number of columns in the game */
-  square *squares;   /**< the grid of squares */
+  square* squares;   /**< the grid of squares */
   bool wrapping;     /**< the wrapping option */
-  queue *undo_stack; /**< stack to undo moves */
-  queue *redo_stack; /**< stack to redo moves */
+  queue* undo_stack; /**< stack to undo moves */
+  queue* redo_stack; /**< stack to redo moves */
 };
 
 /**
  * @brief Move structure.
  * @details This structure is used to save the game history.
  */
-struct move_s
-{
+struct move_s {
   uint i, j;
   square old, new;
 };
 
 typedef struct move_s move;
 
-typedef enum
-{
-  HERE,
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  UP_LEFT,
-  UP_RIGHT,
-  DOWN_LEFT,
-  DOWN_RIGHT
-} direction;
+typedef enum { HERE, UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT } direction;
 
 /* ************************************************************************** */
 /*                                MACRO                                       */
@@ -80,16 +67,16 @@ typedef enum
 /* ************************************************************************** */
 
 /** push a move in the stack */
-void _stack_push_move(queue *q, move m);
+void _stack_push_move(queue* q, move m);
 
 /** pop a move from the stack */
-move _stack_pop_move(queue *q);
+move _stack_pop_move(queue* q);
 
 /** test if the stack is empty */
-bool _stack_is_empty(queue *q);
+bool _stack_is_empty(queue* q);
 
 /** clear all the stack */
-void _stack_clear(queue *q);
+void _stack_clear(queue* q);
 
 /* ************************************************************************** */
 /*                          GAME PRIVATE ROUTINES                             */
@@ -147,7 +134,7 @@ bool _inside(cgame g, int i, int j);
  * @param dir the direction to consider
  * @return true if the next cooardinate are inside the board, false otherwise
  */
-bool _next(cgame g, int *pi, int *pj, direction dir);
+bool _next(cgame g, int* pi, int* pj, direction dir);
 
 /**
  * @brief test if the neighbour of a given square is inside the board
@@ -224,4 +211,4 @@ uint _neigh_size(cgame g, uint i, uint j, bool diag);
  */
 uint _neigh_count(cgame g, uint i, uint j, square s, uint m, bool diag);
 
-#endif // __GAME_PRIVATE_H__
+#endif  // __GAME_PRIVATE_H__
