@@ -46,10 +46,10 @@ void GetGameGridSize(int w, int h, SDL_Rect *game_grid)
 {
   if (h > w)
   {
-    game_grid->x = w / 4;
+    game_grid->x = w / 8;
     game_grid->y = (h - (w / 2)) / 2;
-    game_grid->w = w / 2;
-    game_grid->h = w / 2;
+    game_grid->w = w / 4;
+    game_grid->h = w / 4;
   }
   else
   {
@@ -64,7 +64,7 @@ void GetGameGridSize(int w, int h, SDL_Rect *game_grid)
 
 void GetTopButtonSize(SDL_Rect *game_grid, SDL_Rect *top_buttons_rect)
 {
-  top_buttons_rect->w = game_grid->w / 6;
+  top_buttons_rect->w = game_grid->w / 5;
   top_buttons_rect->h = game_grid->y / 3;
   top_buttons_rect->x = game_grid->x;
   top_buttons_rect->y = game_grid->y / 3;
@@ -167,8 +167,6 @@ Env *init(SDL_Window *win, SDL_Renderer *ren)
   env->marked = IMG_LoadTexture(ren, MARKED);
   if (!env->marked)
     ERROR("IMG_LoadTexture: %s\n", MARKED);
-
-  /* init back arrow texture from PNG image */
   env->back_arrow = IMG_LoadTexture(ren, BACK_ARROW);
   if (!env->back_arrow)
     ERROR("IMG_LoadTexture: %s\n", BACK_ARROW);
@@ -283,9 +281,9 @@ void render(SDL_Window *win, SDL_Renderer *ren, Env *env, game g)
 
   /* display the menu at the top of the grid */
   SDL_RenderCopy(ren, env->back_arrow, NULL, &top_buttons_rect);
-  top_buttons_rect.x += 2 * top_buttons_rect.w + (game_grid.w % game_nb_cols(g) / 2);
+  top_buttons_rect.x += 2 * top_buttons_rect.w + (game_grid.w % 5) / 2;
   SDL_RenderCopy(ren, env->repeat_arrow, NULL, &top_buttons_rect);
-  top_buttons_rect.x += 2 * top_buttons_rect.w + (game_grid.w % game_nb_cols(g) / 2);
+  top_buttons_rect.x += 2 * top_buttons_rect.w + (game_grid.w % 5 )/ 2;
   SDL_RenderCopy(ren, env->forward_arrow, NULL, &top_buttons_rect);
 
   /* display the menu at the bottom of the grid */
