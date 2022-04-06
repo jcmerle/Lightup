@@ -12,3 +12,10 @@ Testing/
 # specific executable
 game_text
 game_test
+
+#android files
+android/bin/*
+android/jni/SDL*
+android/libs/*
+android/obj/*
+android/gen/*
